@@ -24,7 +24,7 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: python -m pip install --upgrade pip
-      - run: pip install -e ".[dev]"
+      - run: pip install -e ".[dev,ml]"
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy
@@ -49,7 +49,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
       - run: python -m pip install --upgrade pip
-      - run: pip install -e ".[dev]"
+      - run: pip install -e ".[dev,ml]"
       - run: pytest --cov --cov-report=term --cov-report=xml
       - name: Example script runs
         run: python examples/compare_conditions.py --machines 2 --segments 2 --out outputs/ci_example.png
@@ -57,11 +57,36 @@ jobs:
         run: pumpguard benchmark --synthetic --n-boot 200 --out outputs/ci_benchmark
       - name: ESP operating-regime example runs
         run: python examples/esp_operating_regime.py --out outputs/ci_esp.png
+      - name: Benchmark with learned models (synthetic)
+        run: pumpguard benchmark --synthetic --learned --n-boot 200 --out outputs/ci_benchmark_ml
+      - name: Leakage experiment (synthetic)
+        run: pumpguard leakage --synthetic --repeats 2 --out outputs/ci_leakage
+      - name: Leakage example runs
+        run: >-
+          python examples/leakage_experiment.py --levels 0.05 1.0 --repeats 1
+          --machines 3 --segments 3 --out outputs/ci_leakage.png
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         with:
           name: coverage-xml
           path: coverage.xml
+
+  core-only:
+    name: Tests without the [ml] extra
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - name: scikit-learn must be absent
+        run: python -c "import importlib.util, sys; sys.exit(importlib.util.find_spec('sklearn') is not None)"
+      - run: pytest -q
+      - name: Core leakage experiment runs (nearest centroid only)
+        run: pumpguard leakage --synthetic --repeats 1 --machines 3 --segments 3 --out outputs/ci_leakage_core
 
   build:
     name: Build & smoke-test wheel

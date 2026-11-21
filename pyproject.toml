@@ -51,6 +51,7 @@ dev = [
   "pre-commit>=3.5",
   "build>=1.0",
 ]
+ml = ["scikit-learn>=1.3"]
 
 [project.scripts]
 pumpguard = "pumpguard.cli:main"
@@ -104,5 +105,5 @@ strict = true
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = ["scipy.*", "pandas.*"]
+module = ["scipy.*", "pandas.*", "sklearn.*"]
 ignore_missing_imports = true

@@ -1,4 +1,4 @@
-"""Leakage-safe benchmark of transparent baselines on a feature table.
+"""Leakage-safe benchmark of transparent baselines (and optional learned models).
 
 Input: one row per segment with a label column, a group column (the unit that
 must not be split, e.g. a physical bearing) and feature columns. Optional
@@ -14,6 +14,10 @@ Every score comes with a 95 % group-bootstrap interval, per-group and
 per-operating-condition results (failure modes), and, for cross-validation, a
 comparison with a deliberately leaky random-segment split.
 
+With ``learned=True`` (needs the ``[ml]`` extra) logistic regression and a random
+forest are evaluated on the same folds, and each is checked against every
+baseline with the protocol's decision rule (``results["decision"]``).
+
 The protocol is fixed in ``docs/benchmark-protocol.md``.
 """
 
@@ -22,6 +26,7 @@ from __future__ import annotations
 import json
 import math
 from collections.abc import Callable, Sequence
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -39,7 +44,13 @@ from .evaluation import (
     stratified_group_kfold,
 )
 
-__all__ = ["DEFAULT_FEATURES", "run_benchmark", "synthetic_feature_table", "write_report"]
+__all__ = [
+    "DEFAULT_FEATURES",
+    "decide_against_baselines",
+    "run_benchmark",
+    "synthetic_feature_table",
+    "write_report",
+]
 
 #: Transparent features used by the threshold and centroid baselines.
 DEFAULT_FEATURES: tuple[str, ...] = (
@@ -54,6 +65,8 @@ DEFAULT_FEATURES: tuple[str, ...] = (
 )
 
 Model = Any  # objects with fit / predict / describe / name
+
+_LEARNED = ("logistic_regression", "random_forest")
 
 
 def _bal_acc(t: NDArray[np.object_], p: NDArray[np.object_]) -> float:
@@ -94,6 +107,7 @@ def _evaluate(
     metrics = classification_metrics(t, p, labels)
     result: dict[str, Any] = {
         "baseline": name,
+        "kind": "learned" if name in _LEARNED else "baseline",
         "fitted_rules": descriptions,
         "metrics": metrics,
         "ci95": {
@@ -153,8 +167,18 @@ def run_benchmark(
     n_splits: int = 5,
     n_boot: int = 1000,
     seed: int = 0,
+    learned: bool = False,
 ) -> dict[str, Any]:
-    """Evaluate the transparent baselines; see the module docstring."""
+    """Evaluate the transparent baselines; see the module docstring.
+
+    ``learned=True`` adds logistic regression and a random forest (fixed
+    hyperparameters, seeded with ``seed``) and raises ``ImportError`` without
+    scikit-learn.
+    """
+    if learned:
+        from .models import make_learned_model, require_sklearn
+
+        require_sklearn()
     for col in (label_col, group_col, *features):
         if col not in df.columns:
             raise ValueError(f"feature table is missing column {col!r}")
@@ -186,6 +210,7 @@ def run_benchmark(
         "seed": seed,
         "n_boot": n_boot,
         "features": list(features),
+        "learned": learned,
         "n_rows_dropped_nonfinite": int((~finite).sum()),
         "data_summary": {
             str(k): {"groups": int(v.groups), "segments": int(v.segments)}
@@ -207,6 +232,15 @@ def run_benchmark(
         ("single_feature_threshold", lambda: SingleFeatureThreshold(features, healthy_label)),
         ("envelope_rule", lambda: EnvelopeRule("detection", healthy_label=healthy_label)),
     ]
+    learned_models: list[tuple[str, Callable[[], Model]]] = []
+    if learned:
+        learned_models = [
+            (name, partial(make_learned_model, name, features, seed=seed)) for name in _LEARNED
+        ]
+        results["learned_hyperparameters"] = {
+            name: factory().hyperparameters() for name, factory in learned_models
+        }
+    det_models += learned_models
     results["tasks"]["detection"] = [evaluate(n, f, y_det, det_labels) for n, f in det_models]
 
     # Diagnosis: healthy / outer / inner.
@@ -221,6 +255,7 @@ def run_benchmark(
                 ),
             ),
             ("nearest_centroid", lambda: NearestCentroid(features)),
+            *learned_models,
         ]
         results["tasks"]["diagnosis"] = [evaluate(n, f, y, diag_labels) for n, f in diag_models]
     else:
@@ -250,14 +285,55 @@ def run_benchmark(
                     "inflation": random_score - group_score,
                 }
         results["leakage_check"] = check
+    if learned:
+        results["decision"] = {
+            task: decide_against_baselines(rows) for task, rows in results["tasks"].items()
+        }
     return results
 
 
-def synthetic_feature_table(seed: int = 0, machines: int = 5, segments: int = 4) -> pd.DataFrame:
+def decide_against_baselines(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """Apply the protocol's decision rule to each learned model of one task.
+
+    A learned model is *meaningfully better* than a baseline only if its lower
+    95 % bound of balanced accuracy exceeds the baseline's point estimate. It
+    "beats all baselines" only if that holds for every baseline.
+    """
+    baselines = [r for r in rows if r.get("kind", "baseline") == "baseline"]
+    out: dict[str, Any] = {}
+    for r in rows:
+        if r.get("kind") != "learned":
+            continue
+        low = float(r["ci95"]["balanced_accuracy"][0])
+        versus = {
+            b["baseline"]: {
+                "baseline_balanced_accuracy": float(b["metrics"]["balanced_accuracy"]),
+                "model_ci95_low": low,
+                "meaningfully_better": low > float(b["metrics"]["balanced_accuracy"]),
+            }
+            for b in baselines
+        }
+        out[r["baseline"]] = {
+            "beats_all_baselines": bool(versus)
+            and all(v["meaningfully_better"] for v in versus.values()),
+            "versus": versus,
+        }
+    return out
+
+
+def synthetic_feature_table(
+    seed: int = 0,
+    machines: int = 5,
+    segments: int = 4,
+    *,
+    severity_range: tuple[float, float] = (0.5, 1.5),
+) -> pd.DataFrame:
     """Dry-run table with the same structure as a real 3-class bearing task.
 
     Synthetic healthy / outer-race / inner-race signals from virtual machines.
     Useful for testing the pipeline, never as evidence of diagnostic performance.
+    A low ``severity_range`` (e.g. 0.05-0.15) makes faults subtle relative to
+    machine-to-machine differences, which is the regime where leakage shows.
     """
     from .dataset import make_synthetic_dataset
 
@@ -265,6 +341,7 @@ def synthetic_feature_table(seed: int = 0, machines: int = 5, segments: int = 4)
         conditions=("healthy", "bearing_outer", "bearing_inner"),
         machines_per_condition=machines,
         segments_per_machine=segments,
+        severity_range=severity_range,
         duration=0.5,
         seed=seed,
     )
@@ -288,10 +365,17 @@ def _report_markdown(results: dict[str, Any], dataset: dict[str, Any] | None) ->
     title = dataset.get("dataset_id", "dataset") if dataset else "feature table"
     task = dataset.get("task", "") if dataset else ""
     lines += [f"# Benchmark report: {title} {task}".rstrip(), ""]
-    lines += [
-        "> **Read this first.** These are transparent, non-ML baselines evaluated with a "
-        "leakage-safe split. Intervals come from a bootstrap over groups.",
-    ]
+    if results.get("learned"):
+        lines += [
+            "> **Read this first.** Transparent baselines and learned models (scikit-learn, "
+            "hyperparameters fixed in advance) evaluated on the same leakage-safe folds. "
+            "Intervals come from a bootstrap over groups.",
+        ]
+    else:
+        lines += [
+            "> **Read this first.** These are transparent, non-ML baselines evaluated with a "
+            "leakage-safe split. Intervals come from a bootstrap over groups.",
+        ]
     if dataset and dataset.get("synthetic"):
         lines += ["> **Synthetic data**: a pipeline dry run, not evidence of real performance."]
     if dataset and dataset.get("machine_type"):
@@ -321,7 +405,7 @@ def _report_markdown(results: dict[str, Any], dataset: dict[str, Any] | None) ->
         lines += [
             f"## Results: {task}",
             "",
-            "| Baseline | Balanced accuracy [95 % CI] | Macro-F1 [95 % CI] | Rule (first fold) |",
+            "| Model | Balanced accuracy [95 % CI] | Macro-F1 [95 % CI] | Fitted (first fold) |",
             "|---|---|---|---|",
         ]
         for r in rows:
@@ -352,6 +436,28 @@ def _report_markdown(results: dict[str, Any], dataset: dict[str, Any] | None) ->
     if "diagnosis_skipped" in results:
         lines += [f"_Diagnosis not evaluated: {results['diagnosis_skipped']}_", ""]
 
+    if "decision" in results:
+        lines += [
+            "## Decision: learned models vs baselines",
+            "",
+            "Protocol rule: a learned model is meaningfully better than a baseline only if its "
+            "lower 95 % bound exceeds the baseline's point estimate, and is worth reporting as "
+            "an improvement only if that holds against **every** baseline.",
+            "",
+            "| Task / model | Lower 95 % bound | Beats all baselines | Baselines not beaten |",
+            "|---|---|---|---|",
+        ]
+        for task, models in results["decision"].items():
+            for name, d in models.items():
+                low = next(iter(d["versus"].values()))["model_ci95_low"] if d["versus"] else None
+                missed = [b for b, v in d["versus"].items() if not v["meaningfully_better"]]
+                lines.append(
+                    f"| {task}/{name} | {_fmt(low) if low is not None else 'n/a'} | "
+                    f"{'yes' if d['beats_all_baselines'] else 'no'} | "
+                    f"{', '.join(missed) if missed else '-'} |"
+                )
+        lines.append("")
+
     if "leakage_check" in results:
         lines += [
             "## Leakage check",
@@ -376,6 +482,15 @@ def _report_markdown(results: dict[str, Any], dataset: dict[str, Any] | None) ->
         "not meaningful.",
         "- Thresholds and centroids are fitted per training fold; the rules shown are from the "
         "first fold only (all folds are in `results.json`).",
+        *(
+            [
+                "- Learned models use fixed hyperparameters (see `results.json`); none were tuned. "
+                "Random-forest importances are impurity-based, computed on training data, and "
+                "biased toward continuous features: they are hints, not evidence.",
+            ]
+            if results.get("learned")
+            else []
+        ),
         "- Envelope features use a fixed demodulation band and nominal bearing geometry "
         "(1-2 % manufacturer variation); no band optimisation was performed.",
         "",

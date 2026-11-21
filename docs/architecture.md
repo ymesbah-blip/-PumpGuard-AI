@@ -19,9 +19,12 @@ src/pumpguard/
 ├── regime.py      synthetic speed sweeps, naive-projection error
 ├── datasets/      provenance.py (schema), paderborn.py (bearing files), scada.py (trend logs)
 ├── baselines.py   transparent non-ML baselines (threshold, envelope rule, nearest centroid)
+├── models.py      learned models, optional [ml] extra (logistic regression, random forest)
 ├── evaluation.py  group k-fold, metrics, group-bootstrap intervals
-├── benchmark.py   leakage-safe benchmark + Markdown/JSON report
-├── cli.py         `pumpguard` command (demo, features, dataset, bearing, paderborn, benchmark)
+├── benchmark.py   leakage-safe benchmark + decision rule + Markdown/JSON report
+├── leakage.py     same model under random vs group split, repeated over fold seeds
+├── cli.py         `pumpguard` command (demo, features, dataset, bearing, paderborn,
+│                  benchmark, leakage)
 ├── demo.py        legacy `python -m pumpguard.demo` entry point
 └── _validation.py shared input checks
 ```
@@ -58,7 +61,8 @@ path from synthetic experiments to real data short.
 5. **Leakage-aware data structures.** Datasets carry `group_id`; the split utility never puts
    one group on both sides.
 6. **Light core.** Runtime dependencies: NumPy, SciPy, pandas, Matplotlib. Heavier tools (ML,
-   docs) go into optional extras.
+   docs) go into optional extras. `pumpguard.models` imports scikit-learn only when a model is
+   created, and a test checks that importing the core never loads it.
 7. **Headless-safe.** Plotting uses `matplotlib.figure.Figure`, never `pyplot` global state.
 
 ## Public API and stability

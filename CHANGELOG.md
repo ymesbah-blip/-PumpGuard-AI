@@ -6,6 +6,36 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+Roadmap v0.4 groundwork: learned models judged against the baselines, and the random-split vs
+group-split experiment.
+
+### Added
+- Optional extra `[ml]` (`scikit-learn>=1.3`). The core package never imports scikit-learn.
+  Without the extra, learned models raise `ImportError` with the install command.
+- `pumpguard.models`: `LogisticRegressionModel` (z-score, L2, balanced class weights) and
+  `RandomForestModel` (300 trees, min leaf 3, balanced class weights). Both use the baseline
+  interface (`fit`, `predict`, `describe`) with fixed hyperparameters. Readable explanations:
+  `coefficients()` and `importances()`.
+- `run_benchmark(..., learned=True)` and `pumpguard benchmark --learned`. Learned models run on
+  the same folds as the baselines and are included in the leakage check.
+  `results["decision"]` applies the protocol rule: a model counts as better only if its lower
+  95 % bound beats every baseline's point estimate. The report has a matching section.
+- `pumpguard.leakage.compare_splits` and `pumpguard leakage`: the same model under group k-fold
+  and random k-fold over several fold seeds, with inflation per repeat, a Markdown + JSON report
+  and an explanation of below-chance group scores.
+- `synthetic_feature_table(severity_range=...)` for subtle-fault synthetic tables.
+- `examples/leakage_experiment.py` and figure `docs/images/leakage_vs_severity.png`.
+- Docs: `docs/leakage-experiment.md`, model cards for both learned models, and protocol
+  amendment 1 (learned models, fixed hyperparameters, written before any real result).
+- 25 tests (270 in total). The learned-model tests skip without scikit-learn.
+
+### Changed
+- Benchmark report: the results table column is now "Model", and each row has
+  `kind: baseline | learned` in `results.json`. Baseline results are unchanged.
+- CLI: a missing optional dependency exits with code 2 and a message instead of a traceback.
+- CI installs `.[dev,ml]`, runs the learned benchmark and the leakage experiment, and adds a
+  core-only job without scikit-learn.
+
 ## [0.3.0] - unreleased
 
 First opt-in path to real measurements (scope of issue #3) and a mechanically interpretable
