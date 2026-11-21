@@ -1,26 +1,29 @@
-# Scientific validity and reproducibility
+# Scientific validity and verification plan
 
-## Current status
-This repository generates **synthetic** single-channel waveforms and a demonstration health score. It is not calibrated to actual pumps or industrial standards.
+## Signals and measurements
 
-## Equations and interpretation
+- Shaft frequency: f_r = RPM / 60 Hz.
+- Discrete RMS: sqrt(mean(x[n]^2)); amplitude has the same units as x.
+- Crest factor: max(|x|) / RMS (dimensionless), defined as 0 for all-zero signal.
+- Pearson kurtosis: unbiased SciPy calculation with fisher=False (dimensionless); returns NaN for constant signals.
+- Welch PSD: Hann-windowed, overlapping periodograms averaged. PSD has amplitude²/Hz; the integrated PSD approximates variance when mean is removed.
+- Order band power: sum(PSD(f) * df) around `order * RPM/60`; it is a descriptive energy proxy, **not** a standard fault threshold.
 
-- Shaft frequency: f_rot [Hz] = RPM / 60.
-- RMS = sqrt(mean(x[n]^2)), in signal amplitude units.
-- Crest factor = max(abs(x[n])) / RMS (dimensionless).
-- Pearson kurtosis is dimensionless; document the small-sample convention.
-- Welch PSD: windowed overlapping segment periodograms, averaged; units of amplitude squared per Hz. See https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html
-- Shaft-order band energy: numerical integral of PSD near f = order × RPM/60, with units amplitude squared. Not a standardized fault threshold.
+The toy health score has **no calibration** and is intentionally labeled as such. Never interpret it as remaining useful life, a fault probability or industrial alarm criterion.
 
-## Evaluation plan
+## Test levels
 
-1. Validate code on deterministic simulated tones, zero signals, invalid sampling rates and time jitter.
-2. Require metadata for any external measurement: sensor position and orientation, calibration, amplitude units, sampling frequency, RPM, pump operating state, label and acquisition ID.
-3. Prevent data leakage by grouping windows by acquisition/machine, not by individual sample, across train and test.
-4. Compare simple non-ML baselines to advanced methods under variable RPM/load and out-of-domain machines.
-5. Report precision, recall, false positive rate, uncertainty and repeated independent experiments only when true labels exist.
-6. Validate on instrumented pumps before even suggesting operational use; industrial safety and cyber-security requirements need independent assessment.
+1. Unit tests: finite inputs, zero signals, sample count, alias rejection, deterministic seeded generation, exact tone peak, energy consistency and CSV timestamp QA.
+2. Dataset integration: verify units, speed, sensor position, labels, licensing and independently measured operating conditions before loading experimental data.
+3. Algorithm studies: stratify/group by machine and acquisition; use a held-out machine/operating-point test if available. Compare to simple RMS and shaft-harmonic baselines, and include uncertainty intervals.
+4. Prototype rig: verify sensor calibration, excitation spectrum, speed and load variation, repeated trials and safe instrument handling before any claims about diagnostic sensitivity.
+5. Site deployment: separate external engineering acceptance, cyber-security, alarms and safety certification is required. **Not provided** by PumpGuard-AI.
 
-## Caveats
+## Failure cases to document
 
-Cavitation, misalignment, imbalance, bearing problems and sensor mounting can produce overlapping spectral effects. Simulated signals establish software reproducibility, **not** fault-detection sensitivity or specificity. An order peak is evidence of spectral energy only.
+Variable speed or sampling, cavitation, bearing defects, impeller imbalance, misalignment, seal wear and sensor mounting are all distinct physical mechanisms. A strong synthetic 1x vibration signal is **not** proof of imbalance; similar peaks can occur with other excitation paths. The 4.2x impulse sequence is a pedagogical stand-in, not a bearing fault-frequency model, and cannot establish bearing condition without actual geometry.
+
+## Further reading
+
+- SciPy Welch PSD: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html
+- Paderborn University original dataset and terms: https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter

@@ -1,0 +1,31 @@
+name: Bug report
+description: Something produces wrong results, crashes, or does not match the docs
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you expected and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproducible example
+      description: Shortest code or CLI command that shows the problem. Include the seed.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output / traceback
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Versions
+      description: Output of `pumpguard --version`, `python --version`, and your OS.
+    validations:
+      required: true

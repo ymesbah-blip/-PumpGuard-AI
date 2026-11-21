@@ -1,18 +1,17 @@
-# Data provenance, licences and measured-signal integration
+# Dataset provenance and licensing
 
-The repository contains no real bearing or pump measurements. Its illustrative data have arbitrary amplitude units.
+The bundled generator outputs only **synthetic, uncalibrated, arbitrary-unit signals**. Its three labels are illustrative classes rather than field-verified pump faults.
 
-## Scientific candidate dataset
+## Candidate experimental dataset
 
-Paderborn University KAt Bearing DataCenter:
-https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter
+**Paderborn University, KAt Bearing DataCenter**: https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter
 
-The university provides vibration and motor-current signals acquired on a **bearing / electromechanical drivetrain rig**, not a centrifugal-pump field rig. It states that the dataset uses **CC BY-NC 4.0** and requires attribution (Christian Lessmeier et al.); commercial use requires contacting the author. Do not assume the data inherits this repository's MIT code licence, and do not redistribute it inside this repository without confirming the applicable rights.
+Vibration and motor-current measurements from a bearing test rig, **not a centrifugal-pump field dataset**. It is listed as **CC BY-NC 4.0**; the university says non-commercial academic use is permitted with attribution to Christian Lessmeier et al. Commercial use requires contacting the author. Keep this dataset out of the MIT-licensed code repository unless rights are established; download it from the original site and cite its publication.
 
-## Metadata requirements
+## Expected record metadata (not yet automated)
 
-Record dataset source, original URL, citation, licence, machine type, acquisition ID, sensor location and orientation, amplitude units, accelerometer calibration, fs, RPM, load, hydraulic conditions where measured, acquisition duration and fault-label provenance.
+For every trace document `dataset_id`, source URL, source licence and citation, `machine_type`, sensor location/orientation, sensor calibration and physical units (e.g., m/s²), `fs_hz`, measurement duration, `rpm` measured rather than assumed, load/flow/pressure, operating point, labeling method and collection date. Capture the same machine identifier for grouped cross-validation. Never split adjacent windows from the same acquisition across train and test.
 
-For local CSV imports, require monotonic timestamps, numeric finite values and approximately uniform sampling before Fourier/PSD analysis. If RPM is entered manually, label it as **supplied** rather than estimated or measured.
+## CSV import contract
 
-Never upload proprietary field recordings, site names, sensor identifiers or sensitive industrial logs without authorization.
+Columns `time_s` and `vibration`, numeric, finite, strictly increasing, sampling interval within 1% of median. No automatic resampling, integration, acceleration-unit conversion, filtering or calibration occurs. Use `--input-csv path/to/trace.csv --rpm <measured-speed>`; `--rpm` is a user-supplied value, not estimated from the signal. Outputs remain unverified until dataset provenance is documented.

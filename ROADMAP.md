@@ -1,21 +1,50 @@
-# PumpGuard-AI engineering and community roadmap
+# Roadmap
 
-The repository is an **educational prototype**. Planned capabilities are not operational or safety-ready diagnostics.
+Each milestone ends with something reproducible: code, tests, and a short write-up of what
+was learned **and what was not shown**.
 
-## Milestones
+## ✅ v0.2: Solid foundation (this release)
+Installable package, CLI, frequency-domain and envelope features, bearing kinematics, richer
+synthetic conditions, leakage-aware dataset builder, CI, community files.
 
-- [x] v0.1: Synthetic healthy / imbalance / bearing-like vibration examples and simple time-domain descriptors.
-- [ ] v0.2: Installable `src/pumpguard` package, deterministic test suite and Python CI, Welch PSD, shaft-order frequency analysis, validated CSV ingestion, unit-aware reports.
-- [ ] v0.3: Documented loaders for experimental bearing data and condition/sampling metadata.
-- [ ] v0.4: Robust signal-processing baselines with machine/acquisition-grouped evaluation and confidence intervals.
-- [ ] v0.5: Dedicated centrifugal-pump test rig with hydraulic operating data: RPM, head, flow, temperature, pressure, vibration.
-- [ ] v0.6: Explainable classifiers validated against simple physics-informed baselines, without data leakage.
-- [ ] v1.0: External reproductions, documented releases, field validation plan and sustained community maintenance.
+## v0.3: First real data
+- Loader for one public bearing dataset (download at runtime, checksum, license notice,
+  dataset card, `group_id` per recording).
+- Resampling utilities and per-dataset sampling-rate handling.
+- Notebook: do the synthetic-data features behave the same on measured data?
 
-## Engineering constraints
+## v0.4: Baseline models with honest evaluation
+- Optional `[ml]` extra (scikit-learn).
+- Baselines: threshold rules, logistic regression, random forest on transparent features.
+- Leakage-safe evaluation: group split, cross-validation by group, confusion matrix,
+  per-class precision/recall/F1, confidence intervals.
+- Experiment: the same model evaluated with a random split vs a group split (research
+  question on leakage).
 
-No synthetic vibration should be presented as real plant measurements. A 1x shaft-frequency peak does not prove imbalance. A bearing-like impulse train is not a geometry-derived BPFO/BPFI model. A toy health score is neither a risk probability nor a calibrated diagnostic score.
+## v0.5: Robustness and explainability
+- Sensitivity to noise, speed variation and severity (severity sweeps are already
+  supported by the generator).
+- Kurtogram / spectral-kurtosis band selection for envelope analysis.
+- Compare model attributions with physically expected features (e.g. BPFI ratio for an
+  inner-race fault).
+- Model card for every published baseline.
 
-## Evidence of open-source maintenance
+## v0.6: Digital-twin prototype
+- State model: operating point (speed, flow, head) → expected vibration signature.
+- Degradation trajectories (severity over time) and remaining-useful-life experiments,
+  clearly labelled synthetic.
+- Uncertainty-aware comparison of measured vs expected signatures.
 
-Welcome reproducible issues and outside contributions. Demonstrate meaningful adoption through actual users, cited scientific work, reproducible examples, reviewed contributions and release history rather than manufactured repository metrics. See `docs/validation.md` and `docs/datasets.md`.
+## v1.0: Stable API
+- Documented, versioned public API with deprecation policy.
+- Documentation site (MkDocs) with tutorials.
+- Engineering validation report against measured data, including limitations.
+
+## Good first issues
+
+- Add a bearing preset with a cited source (e.g. a 6203 or 6305 bearing).
+- Add `--waveform-seconds` to `pumpguard demo`.
+- Add a `misalignment` example figure to the docs.
+- Add an `rms_velocity` feature (integrate acceleration to velocity in the frequency domain,
+  10–1000 Hz band) with an analytic test.
+- Translate the README quick start into Arabic or French (`docs/i18n/`).

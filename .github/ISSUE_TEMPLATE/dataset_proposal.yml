@@ -1,0 +1,33 @@
+name: Dataset proposal
+description: Propose a public dataset loader (bearing, pump, or rotating-machinery data)
+labels: [dataset]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Dataset name and URL
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: License / terms of use
+      description: Exact license. Loaders download data at runtime; we never commit third-party data.
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Acquisition details
+      description: Machine, sensor type and location, sampling rate, speeds/loads, fault types, labelling method.
+    validations:
+      required: true
+  - type: textarea
+    id: leakage
+    attributes:
+      label: Leakage risks
+      description: How are recordings grouped (per machine, per run, per fault)? What must be split by group?
+  - type: textarea
+    id: citation
+    attributes:
+      label: Required citation
