@@ -174,8 +174,10 @@ BEARINGS: dict[str, BearingInfo] = {
         _b("KB23", "outer+inner", "real", "fatigue: pitting (multiple)", 2),
         _b("KB24", "outer+inner", "real", "fatigue: pitting (multiple)", 3),
         _b("KB27", "outer+inner", "real", "plastic deformation: indentations (multiple)", 1),
-        _b("KI04", "inner", "real", "fatigue: pitting", 1),
-        _b("KI14", "inner", "real", "fatigue: pitting", 1),
+        # KI04 and KI14: the fact sheets list a second damage, plastic deformation on the
+        # outer ring ("multiple damage"). Labelled "inner" as in the publication.
+        _b("KI04", "inner", "real", "fatigue: pitting (+ outer-ring indentation)", 1),
+        _b("KI14", "inner", "real", "fatigue: pitting (+ outer-ring indentation)", 1),
         _b("KI16", "inner", "real", "fatigue: pitting", 3),
         _b("KI17", "inner", "real", "fatigue: pitting", 1),
         _b("KI18", "inner", "real", "fatigue: pitting", 2),
@@ -323,6 +325,22 @@ def _iter_channels(obj: Any, depth: int = 0) -> Iterator[dict[str, Any]]:
             yield from _iter_channels(item, depth + 1)
 
 
+def _text(value: Any) -> str:
+    """A struct field as text. MATLAB stores empty fields as ``[]`` (an empty array).
+
+    The real Paderborn files leave ``Unit`` empty for every channel, so
+    ``str(value)`` or ``value or default`` would give ``"[]"`` or raise.
+    """
+    if value is None:
+        return ""
+    if isinstance(value, np.ndarray):
+        if value.size == 0:
+            return ""
+        if value.size == 1:
+            return str(value.item())
+    return str(value)
+
+
 def _channels(path: Path) -> dict[str, dict[str, Any]]:
     mat = _load_mat(path)
     payload = {k: v for k, v in mat.items() if not k.startswith("__")}
@@ -347,8 +365,8 @@ def inspect_file(path: str | Path) -> list[dict[str, Any]]:
         rows.append(
             {
                 "name": name,
-                "unit": str(ch.get("Unit", "")),
-                "raster": str(ch.get("Raster", "")),
+                "unit": _text(ch.get("Unit")),
+                "raster": _text(ch.get("Raster")),
                 "n_samples": int(data.size),
                 "documented_fs_hz": CHANNEL_RATES_HZ.get(name),
             }
@@ -420,7 +438,7 @@ def read_measurement(
                 rpm, rpm_source = median, "measured_speed_channel"
             else:
                 notes.append(
-                    f"speed channel median {median:.4g} {speed.get('Unit', '')!s} not within "
+                    f"speed channel median {median:.4g} {_text(speed.get('Unit'))} not within "
                     f"+/-20 % of nominal {info.condition.rpm:g} rpm; nominal used"
                 )
 
@@ -441,7 +459,7 @@ def read_measurement(
         "sensor": sensor,
         "sensor_location": location,
         "channel": channel,
-        "unit": str(channels[channel].get("Unit") or "unspecified in source"),
+        "unit": _text(channels[channel].get("Unit")) or "unspecified in source",
         "calibration": "values as stored in the source file; no conversion applied",
         "fs_hz": fs,
         "duration_s": duration,
@@ -593,6 +611,9 @@ def build_feature_table(
             rows.append(row)
 
     missing_bearings = sorted(spec.bearings - set(index["bearing"]))
+    from .paderborn_archives import load_verification
+
+    verification = load_verification(root)
     report: dict[str, Any] = {
         "dataset_id": DATASET_ID,
         "source_url": SOURCE_URL,
@@ -621,6 +642,17 @@ def build_feature_table(
         "failures": failures,
         "skipped_files": skipped,
         "speed_notes": notes,
+        "archive_verification": (
+            {
+                "source": verification.get("source"),
+                "mirror": verification.get("mirror"),
+                "archives_ok": verification.get("archives_ok"),
+                "inventory_complete": verification.get("inventory_complete"),
+                "checked_with_pumpguard": verification.get("pumpguard_version"),
+            }
+            if verification
+            else "not verified: run `pumpguard paderborn verify` on this folder first"
+        ),
         "pumpguard_version": __version__,
     }
     if not rows:

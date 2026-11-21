@@ -25,7 +25,8 @@ synthetic conditions, leakage-aware dataset builder, CI, community files.
   decision rule against every baseline).
 - ✅ Experiment: the same model evaluated with a random split vs a group split
   (`pumpguard leakage`, [write-up](docs/leakage-experiment.md), synthetic result).
-- Run both on the real Paderborn tables and publish the reports next to the baselines.
+- ✅ Run both on the real Paderborn `real3` table and publish the reports
+  ([results](docs/results/paderborn-real3/README.md)). Still open: `artificial_to_real`.
 - Nested group cross-validation, if tuning is ever needed (inside training folds only).
 - Second dataset with a different rig, to test whether conclusions transfer.
 

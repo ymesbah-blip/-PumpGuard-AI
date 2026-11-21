@@ -1,0 +1,240 @@
+{
+  "results": {
+    "pumpguard_version": "0.3.0",
+    "question": "How much does a random segment split overstate the group-split score?",
+    "labels": [
+      "healthy",
+      "inner",
+      "outer"
+    ],
+    "chance_balanced_accuracy": 0.3333333333333333,
+    "n_rows": 4765,
+    "n_rows_dropped_nonfinite": 0,
+    "groups_per_class": {
+      "healthy": 5,
+      "inner": 5,
+      "outer": 5
+    },
+    "features": [
+      "rms",
+      "kurtosis",
+      "crest_factor",
+      "impulse_factor",
+      "spectral_centroid_hz",
+      "hf_energy_ratio",
+      "env_bpfo_ratio",
+      "env_bpfi_ratio"
+    ],
+    "n_splits": 5,
+    "n_repeats": 10,
+    "seed": 0,
+    "models": {
+      "nearest_centroid": {
+        "group_kfold": [
+          0.5541342946899982,
+          0.5817297183422894,
+          0.5560201479366057,
+          0.5709946953954503,
+          0.5711693515087123,
+          0.5903611464310485,
+          0.5772939536235407,
+          0.5811053029677783,
+          0.5711677652822341,
+          0.6006742214883716
+        ],
+        "random_kfold": [
+          0.6196085841983702,
+          0.6198177017224186,
+          0.6193978804478434,
+          0.6196069979718918,
+          0.6196044835350588,
+          0.6191881049076713,
+          0.6200274772625906,
+          0.6193978804478434,
+          0.6200265490522359,
+          0.6196092422144935
+        ],
+        "inflation": [
+          0.06547428950837197,
+          0.0380879833801292,
+          0.06337773251123768,
+          0.048612302576441446,
+          0.04843513202634653,
+          0.028826958476622755,
+          0.04273352363904981,
+          0.03829257748006509,
+          0.048858783770001746,
+          0.018935020726121965
+        ],
+        "summary": {
+          "group_mean": 0.5754650597666029,
+          "random_mean": 0.6196284901760417,
+          "inflation_mean": 0.04416343040943882,
+          "inflation_min": 0.018935020726121965,
+          "inflation_max": 0.06547428950837197,
+          "repeats_inflated": 10
+        }
+      },
+      "logistic_regression": {
+        "group_kfold": [
+          0.5715459603403736,
+          0.5289654167153104,
+          0.5492376671246528,
+          0.5862544992492991,
+          0.607849980485571,
+          0.548641768887841,
+          0.6094383137800407,
+          0.5889250873845994,
+          0.5918499131513052,
+          0.6033970724087022
+        ],
+        "random_kfold": [
+          0.7958211874329765,
+          0.7951845876961928,
+          0.7970683492667687,
+          0.7966487981864248,
+          0.7968639904221549,
+          0.7951871021330258,
+          0.7953950212524883,
+          0.7968620163737844,
+          0.7979146069160633,
+          0.7956059951972464
+        ],
+        "inflation": [
+          0.22427522709260284,
+          0.26621917098088244,
+          0.2478306821421159,
+          0.2103942989371257,
+          0.1890140099365839,
+          0.2465453332451848,
+          0.18595670747244764,
+          0.20793692898918503,
+          0.2060646937647581,
+          0.19220892278854418
+        ],
+        "summary": {
+          "group_mean": 0.5786105679527696,
+          "random_mean": 0.7962551654877126,
+          "inflation_mean": 0.21764459753494309,
+          "inflation_min": 0.18595670747244764,
+          "inflation_max": 0.26621917098088244,
+          "repeats_inflated": 10
+        }
+      },
+      "random_forest": {
+        "group_kfold": [
+          0.5121429235617235,
+          0.524194319992244,
+          0.5400485919168876,
+          0.5012060783350796,
+          0.5026437457359827,
+          0.5047857978514327,
+          0.6117101557908027,
+          0.5481664494852424,
+          0.4904736653247587,
+          0.5149885335042023
+        ],
+        "random_kfold": [
+          0.9941299627776933,
+          0.9945481978257904,
+          0.9932912484388975,
+          0.9945501718741608,
+          0.9934994377525913,
+          0.9939215032697684,
+          0.9945481978257904,
+          0.9939179429949195,
+          0.9945511000845156,
+          0.9939167445903335
+        ],
+        "inflation": [
+          0.48198703921596975,
+          0.47035387783354643,
+          0.4532426565220099,
+          0.49334409353908126,
+          0.4908556920166086,
+          0.4891357054183356,
+          0.3828380420349877,
+          0.44575149350967713,
+          0.504077434759757,
+          0.47892821108613126
+        ],
+        "summary": {
+          "group_mean": 0.5250360261498356,
+          "random_mean": 0.9940874507434462,
+          "inflation_mean": 0.4690514245936105,
+          "inflation_min": 0.3828380420349877,
+          "inflation_max": 0.504077434759757,
+          "repeats_inflated": 10
+        }
+      }
+    },
+    "skipped_models": {}
+  },
+  "dataset": {
+    "dataset_id": "paderborn-kat",
+    "source_url": "https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter",
+    "license": "CC BY-NC 4.0",
+    "citation": "Lessmeier, C.; Kimotho, J. K.; Zimmer, D.; Sextro, W. (2016): Condition Monitoring of Bearing Damage in Electromechanical Drive Systems by Using Motor Current Signals of Electric Motors: A Benchmark Data Set for Data-Driven Classification. European Conference of the Prognostics and Health Management Society, Bilbao (Spain). Data: Christian Lessmeier et al., KAt-DataCenter, Chair of Design and Drive Technology, Paderborn University.",
+    "machine_type": "electromechanical bearing test rig (not a centrifugal pump)",
+    "task": "real3",
+    "task_description": "Healthy vs real outer-race vs real inner-race damage: the 15 bearings of the real-damage experiment in Lessmeier et al. (2016). Group k-fold by bearing.",
+    "channel": "vibration_1",
+    "segment_seconds": 1.0,
+    "envelope_band_hz": "default (0.1 fs, 0.4 fs)",
+    "bearing_geometry": {
+      "designation": "6203",
+      "n_elements": 8,
+      "ball_diameter_mm": 6.75,
+      "pitch_diameter_mm": 28.55,
+      "note": "manufacturer-dependent; defect frequencies vary by about 1-2 %"
+    },
+    "conditions": [
+      "N09_M07_F10",
+      "N15_M01_F10",
+      "N15_M07_F04",
+      "N15_M07_F10"
+    ],
+    "max_measurements": null,
+    "n_files_found": 1200,
+    "n_files_selected": 1200,
+    "n_files_used": 1196,
+    "n_segments": 4765,
+    "missing_bearings": [],
+    "failures": [
+      {
+        "file": "K002/N15_M01_F10_K002_10.mat",
+        "error": "N15_M01_F10_K002_10.mat: 291847 samples = 4.560 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      },
+      {
+        "file": "KI16/N15_M01_F10_KI16_4.mat",
+        "error": "N15_M01_F10_KI16_4.mat: 299038 samples = 4.672 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      },
+      {
+        "file": "KI16/N15_M07_F04_KI16_1.mat",
+        "error": "N15_M07_F04_KI16_1.mat: 289013 samples = 4.516 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      },
+      {
+        "file": "KI16/N15_M07_F04_KI16_16.mat",
+        "error": "N15_M07_F04_KI16_16.mat: 287568 samples = 4.493 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      }
+    ],
+    "skipped_files": [],
+    "speed_notes": {},
+    "archive_verification": {
+      "source": "zenodo",
+      "mirror": {
+        "doi": "10.5281/zenodo.15845309",
+        "url": "https://zenodo.org/records/15845309",
+        "uploader": "J. van den Hoogen (Osnabr\u00fcck University)",
+        "license_label_on_mirror": "CC BY 4.0 (cannot relax the original CC BY-NC 4.0)",
+        "missing_from_mirror": [
+          "KA08"
+        ]
+      },
+      "archives_ok": true,
+      "inventory_complete": true,
+      "checked_with_pumpguard": "0.3.0"
+    },
+    "pumpguard_version": "0.3.0"
+  }
+}

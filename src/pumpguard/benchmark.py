@@ -352,6 +352,10 @@ def synthetic_feature_table(
 # -------------------------------------------------------------------- report
 
 
+def _article(noun: str) -> str:
+    return "an" if noun[:1].lower() in "aeiou" else "a"
+
+
 def _fmt(x: float) -> str:
     return "n/a" if x is None or (isinstance(x, float) and math.isnan(x)) else f"{x:.3f}"
 
@@ -380,7 +384,8 @@ def _report_markdown(results: dict[str, Any], dataset: dict[str, Any] | None) ->
         lines += ["> **Synthetic data**: a pipeline dry run, not evidence of real performance."]
     if dataset and dataset.get("machine_type"):
         lines += [
-            f"> Data come from a {dataset['machine_type']}. They do **not** validate "
+            f"> Data come from {_article(dataset['machine_type'])} {dataset['machine_type']}. "
+            "They do **not** validate "
             "diagnosis of centrifugal pumps in the field.",
         ]
     lines += [""]

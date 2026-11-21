@@ -108,6 +108,7 @@ Model cards: [logistic regression](model-cards/logistic_regression.md),
 
 ```bash
 pumpguard paderborn index  /path/to/paderborn
+pumpguard paderborn verify /path/to/paderborn --archives /path/to/rar-files   # MD5 + 80 files per bearing
 pumpguard paderborn features /path/to/paderborn --task real3 --out outputs/pu_real3.csv
 pumpguard benchmark outputs/pu_real3.csv --out outputs/bench_real3 --learned
 pumpguard leakage   outputs/pu_real3.csv --out outputs/leak_real3

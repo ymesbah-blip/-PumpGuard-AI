@@ -1,0 +1,67 @@
+{
+  "dataset_id": "paderborn-kat",
+  "source_url": "https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter",
+  "license": "CC BY-NC 4.0",
+  "citation": "Lessmeier, C.; Kimotho, J. K.; Zimmer, D.; Sextro, W. (2016): Condition Monitoring of Bearing Damage in Electromechanical Drive Systems by Using Motor Current Signals of Electric Motors: A Benchmark Data Set for Data-Driven Classification. European Conference of the Prognostics and Health Management Society, Bilbao (Spain). Data: Christian Lessmeier et al., KAt-DataCenter, Chair of Design and Drive Technology, Paderborn University.",
+  "machine_type": "electromechanical bearing test rig (not a centrifugal pump)",
+  "task": "real3",
+  "task_description": "Healthy vs real outer-race vs real inner-race damage: the 15 bearings of the real-damage experiment in Lessmeier et al. (2016). Group k-fold by bearing.",
+  "channel": "vibration_1",
+  "segment_seconds": 1.0,
+  "envelope_band_hz": "default (0.1 fs, 0.4 fs)",
+  "bearing_geometry": {
+    "designation": "6203",
+    "n_elements": 8,
+    "ball_diameter_mm": 6.75,
+    "pitch_diameter_mm": 28.55,
+    "note": "manufacturer-dependent; defect frequencies vary by about 1-2 %"
+  },
+  "conditions": [
+    "N09_M07_F10",
+    "N15_M01_F10",
+    "N15_M07_F04",
+    "N15_M07_F10"
+  ],
+  "max_measurements": null,
+  "n_files_found": 1200,
+  "n_files_selected": 1200,
+  "n_files_used": 1196,
+  "n_segments": 4765,
+  "missing_bearings": [],
+  "failures": [
+    {
+      "file": "K002/N15_M01_F10_K002_10.mat",
+      "error": "N15_M01_F10_K002_10.mat: 291847 samples = 4.560 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+    },
+    {
+      "file": "KI16/N15_M01_F10_KI16_4.mat",
+      "error": "N15_M01_F10_KI16_4.mat: 299038 samples = 4.672 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+    },
+    {
+      "file": "KI16/N15_M07_F04_KI16_1.mat",
+      "error": "N15_M07_F04_KI16_1.mat: 289013 samples = 4.516 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+    },
+    {
+      "file": "KI16/N15_M07_F04_KI16_16.mat",
+      "error": "N15_M07_F04_KI16_16.mat: 287568 samples = 4.493 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+    }
+  ],
+  "skipped_files": [],
+  "speed_notes": {},
+  "archive_verification": {
+    "source": "zenodo",
+    "mirror": {
+      "doi": "10.5281/zenodo.15845309",
+      "url": "https://zenodo.org/records/15845309",
+      "uploader": "J. van den Hoogen (Osnabr\u00fcck University)",
+      "license_label_on_mirror": "CC BY 4.0 (cannot relax the original CC BY-NC 4.0)",
+      "missing_from_mirror": [
+        "KA08"
+      ]
+    },
+    "archives_ok": true,
+    "inventory_complete": true,
+    "checked_with_pumpguard": "0.3.0"
+  },
+  "pumpguard_version": "0.3.0"
+}
