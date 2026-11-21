@@ -7,7 +7,7 @@ was learned **and what was not shown**.
 Installable package, CLI, frequency-domain and envelope features, bearing kinematics, richer
 synthetic conditions, leakage-aware dataset builder, CI, community files.
 
-## ✅ v0.3: First real data (this release)
+## ✅ v0.3: Local data integration code (not experimentally validated)
 - Paderborn KAt loader for local files (no redistribution), dataset card, provenance validation.
 - Leakage-safe benchmark of transparent baselines with group-bootstrap intervals and a
   pre-registered protocol.
@@ -18,13 +18,16 @@ synthetic conditions, leakage-aware dataset builder, CI, community files.
   measured feature behaviour. Fit a `PumpCurve` from real catalog points and validate
   `solve_operating_point` against a measured well test.
 
-## v0.4: Baseline models with honest evaluation
-- Optional `[ml]` extra (scikit-learn).
-- Learned models (logistic regression, random forest) on the same transparent features, judged
-  against the v0.3 baselines under the unchanged benchmark protocol.
+## ✅ v0.4: Learned models and honest evaluation (research preview)
+- ✅ Optional `[ml]` extra (scikit-learn).
+- ✅ Learned models (logistic regression, random forest) on the same transparent features, judged
+  against the v0.3 baselines under the unchanged protocol (amendment 1: fixed hyperparameters,
+  decision rule against every baseline).
+- ✅ Experiment: the same model evaluated with a random split vs a group split
+  (`pumpguard leakage`, [write-up](docs/leakage-experiment.md), synthetic result).
+- Run both on the real Paderborn tables and publish the reports next to the baselines.
+- Nested group cross-validation, if tuning is ever needed (inside training folds only).
 - Second dataset with a different rig, to test whether conclusions transfer.
-- Experiment: the same model evaluated with a random split vs a group split (research
-  question on leakage).
 
 ## v0.5: Robustness and explainability
 - Sensitivity to noise, speed variation and severity (severity sweeps are already

@@ -39,9 +39,13 @@ the classic signature of a defect rotating through the load zone.*
   point, multistage pump curve with affinity laws, well system curve (IPR + lift + friction),
   operating point as the intersection of the two, shaft and vane-pass orders kept separate from
   sensor observability checks, and a typed SCADA loader with time-block splits.
+- **Learned models and a leakage experiment (v0.4 research preview, optional `[ml]` extra):** logistic
+  regression and a random forest with fixed hyperparameters, judged against the baselines on the
+  same folds with a pre-registered decision rule, plus an experiment that measures how much a
+  random segment split overstates the group-split score.
 - **Provenance:** every synthetic file gets a JSON sidecar with `"synthetic": true` and the full
   generator configuration.
-- **Engineering hygiene:** 241 tests (analytic checks, not just smoke tests), CI on
+- **Engineering hygiene:** 270 tests (analytic checks, not just smoke tests), CI on
   Linux/Windows/macOS for Python 3.10–3.13, ruff, strict mypy, pre-commit.
 
 ## Quick start
@@ -51,7 +55,7 @@ git clone https://github.com/ymesbah-blip/-PumpGuard-AI.git pumpguard-ai
 cd pumpguard-ai   # the repository name starts with "-", which `cd` would read as an option
 python -m venv .venv
 # Windows: .venv\Scripts\activate    macOS/Linux: source .venv/bin/activate
-pip install -e .
+pip install -e .            # core; add ".[ml]" for the learned models (scikit-learn)
 pumpguard demo --condition bearing_outer
 ```
 
@@ -67,6 +71,8 @@ pumpguard dataset --machines 4 --segments 5 --out outputs/features.csv
 pumpguard bearing --rpm 1800                                         # BPFO, BPFI, FTF, BSF
 pumpguard bearing --rpm 1800 --n-elements 8 --ball-mm 7.1 --pitch-mm 33.5
 pumpguard benchmark --synthetic                                      # pipeline dry run
+pumpguard benchmark --synthetic --learned                            # + learned models ([ml])
+pumpguard leakage --synthetic                                        # random vs group split
 pumpguard --help
 ```
 
@@ -110,6 +116,30 @@ result: [docs/benchmark-protocol.md](docs/benchmark-protocol.md). Dataset facts 
 
 > This is a **bearing test rig**, not a centrifugal pump. Results on it do not validate pump
 > diagnosis.
+
+## Learned models and the leakage experiment
+
+```bash
+pip install -e ".[ml]"
+pumpguard benchmark outputs/pu_real3.csv --learned --out outputs/bench_real3
+pumpguard leakage   outputs/pu_real3.csv --out outputs/leak_real3
+```
+
+`--learned` adds logistic regression and a random forest to the benchmark. They see the same
+eight features and the same folds as the baselines, their hyperparameters are fixed in the
+protocol (no tuning), and the report states whether each beats **every** baseline by the
+protocol's rule. On synthetic data neither does: the one-parameter envelope rule is already at
+1.0. Model cards: [docs/model-cards/](docs/model-cards/).
+
+`pumpguard leakage` runs the same model with a group split and a random segment split over
+several fold seeds and reports the gap.
+
+![Synthetic leakage experiment](docs/images/leakage_vs_severity.png)
+
+On synthetic machines with subtle faults, a random forest scores 0.53–0.62 on a random split
+and below chance on unseen machines. That gap is the cost of a leaky protocol. The numbers
+depend on the generator and are not an estimate for real data:
+[docs/leakage-experiment.md](docs/leakage-experiment.md).
 
 ## Pump operating point (ESP focus)
 
@@ -166,8 +196,10 @@ machine or recording (`group_id`), never by segment, or reported accuracy will b
 
 ## Roadmap
 
-v0.3 (this release) adds the Paderborn loader, provenance validation and the leakage-safe
-baseline benchmark. Next: v0.4 learned models judged against those baselines, v0.5 robustness
+v0.3 groundwork added the Paderborn loader, provenance validation and the leakage-safe
+baseline benchmark. v0.4.0 adds: learned models judged against those baselines and
+the random-vs-group split experiment. Still open after v0.4.0: independent real-data validation and a second
+dataset. Then v0.5 robustness
 and explainability, v0.6 a digital-twin prototype. Details and good first
 issues are in [ROADMAP.md](ROADMAP.md).
 

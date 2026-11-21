@@ -21,7 +21,7 @@ git clone https://github.com/<owner>/pumpguard-ai.git
 cd pumpguard-ai
 python -m venv .venv
 # Windows: .venv\Scripts\activate    macOS/Linux: source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -e ".[dev,ml]"   # ml: scikit-learn, for the learned-model tests
 pre-commit install          # runs ruff on every commit
 ```
 

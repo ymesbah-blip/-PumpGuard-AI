@@ -6,7 +6,8 @@ Commands:
     dataset    build a labelled synthetic feature table
     bearing    print bearing defect frequencies for a shaft speed
     paderborn  index / inspect / extract features from local Paderborn KAt files
-    benchmark  leakage-safe benchmark of transparent baselines on a feature table
+    benchmark  leakage-safe benchmark of transparent baselines (+ learned models with --learned)
+    leakage    the same model under a random split vs a group split
 """
 
 from __future__ import annotations
@@ -265,7 +266,9 @@ def _cmd_benchmark(args: argparse.Namespace) -> int:
         df = pd.read_csv(args.features)
         sidecar = Path(args.features).with_suffix(".json")
         dataset = json.loads(sidecar.read_text(encoding="utf-8")) if sidecar.exists() else None
-    results = run_benchmark(df, n_splits=args.n_splits, n_boot=args.n_boot, seed=args.seed)
+    results = run_benchmark(
+        df, n_splits=args.n_splits, n_boot=args.n_boot, seed=args.seed, learned=args.learned
+    )
     json_path, md_path = write_report(results, args.out, dataset)
     for task, rows in results["tasks"].items():
         for r in rows:
@@ -274,6 +277,59 @@ def _cmd_benchmark(args: argparse.Namespace) -> int:
                 f"{task:<10} {r['baseline']:<26} balanced accuracy "
                 f"{r['metrics']['balanced_accuracy']:.3f}  [95% CI {lo:.2f}, {hi:.2f}]"
             )
+    for task, models in results.get("decision", {}).items():
+        for name, d in models.items():
+            verdict = "beats all baselines" if d["beats_all_baselines"] else "does not beat all"
+            print(f"decision   {task}/{name}: {verdict} (protocol rule)")
+    print(f"Saved report:  {md_path}\nSaved results: {json_path}")
+    return 0
+
+
+def _cmd_leakage(args: argparse.Namespace) -> int:
+    import pandas as pd
+
+    from .benchmark import synthetic_feature_table
+    from .leakage import compare_splits, write_leakage_report
+
+    dataset: dict[str, object] | None
+    if args.synthetic:
+        low, high = args.severity
+        df = synthetic_feature_table(
+            seed=args.seed,
+            machines=args.machines,
+            segments=args.segments,
+            severity_range=(low, high),
+        )
+        dataset = {
+            "dataset_id": "synthetic",
+            "synthetic": True,
+            "settings": f"severity {low:g}-{high:g}, {args.machines} machines per class, "
+            f"{args.segments} segments per machine",
+        }
+    elif args.features is None:
+        raise ValueError("give a feature table CSV or --synthetic")
+    else:
+        df = pd.read_csv(args.features)
+        sidecar = Path(args.features).with_suffix(".json")
+        dataset = json.loads(sidecar.read_text(encoding="utf-8")) if sidecar.exists() else None
+    results = compare_splits(
+        df,
+        label_col=args.label_col,
+        group_col=args.group_col,
+        models=args.models,
+        n_repeats=args.repeats,
+        n_splits=args.n_splits,
+        seed=args.seed,
+    )
+    json_path, md_path = write_leakage_report(results, args.out, dataset)
+    for name, m in results["models"].items():
+        s = m["summary"]
+        print(
+            f"{name:<20} group k-fold {s['group_mean']:.3f}  random k-fold {s['random_mean']:.3f}"
+            f"  inflation {s['inflation_mean']:+.3f}"
+        )
+    for name, reason in results["skipped_models"].items():
+        print(f"{name:<20} skipped: {reason}")
     print(f"Saved report:  {md_path}\nSaved results: {json_path}")
     return 0
 
@@ -368,14 +424,42 @@ def build_parser() -> argparse.ArgumentParser:
     )  # fmt: skip
     pb_feats.set_defaults(func=_cmd_paderborn_features)
 
-    bench = sub.add_parser("benchmark", help="leakage-safe benchmark of transparent baselines")
+    bench = sub.add_parser("benchmark", help="leakage-safe benchmark of baselines and models")
     bench.add_argument("features", nargs="?", help="feature table CSV (e.g. from paderborn)")
     bench.add_argument("--synthetic", action="store_true", help="dry run on synthetic data")
     bench.add_argument("--out", default="outputs/benchmark")
     bench.add_argument("--n-splits", type=int, default=5)
     bench.add_argument("--n-boot", type=int, default=1000)
     bench.add_argument("--seed", type=int, default=0)
+    bench.add_argument(
+        "--learned",
+        action="store_true",
+        help="also evaluate logistic regression and a random forest (needs the [ml] extra)",
+    )
     bench.set_defaults(func=_cmd_benchmark)
+
+    from .leakage import SPLIT_MODELS
+
+    leak = sub.add_parser("leakage", help="same model under a random split vs a group split")
+    leak.add_argument("features", nargs="?", help="feature table CSV with label and group columns")
+    leak.add_argument("--synthetic", action="store_true", help="run on a synthetic table")
+    leak.add_argument(
+        "--severity", type=float, nargs=2, default=(0.05, 0.15), metavar=("LOW", "HIGH"),
+        help="synthetic fault severity range (default 0.05 0.15: subtle faults)",
+    )  # fmt: skip
+    leak.add_argument("--machines", type=int, default=6, help="synthetic machines per class")
+    leak.add_argument("--segments", type=int, default=6, help="synthetic segments per machine")
+    leak.add_argument(
+        "--models", nargs="+", choices=SPLIT_MODELS,
+        help="models to compare (default: all that can be imported)",
+    )  # fmt: skip
+    leak.add_argument("--label-col", default="label")
+    leak.add_argument("--group-col", default="group_id")
+    leak.add_argument("--repeats", type=int, default=5, help="repeats with different fold seeds")
+    leak.add_argument("--n-splits", type=int, default=5)
+    leak.add_argument("--seed", type=int, default=0)
+    leak.add_argument("--out", default="outputs/leakage")
+    leak.set_defaults(func=_cmd_leakage)
     return parser
 
 
@@ -387,6 +471,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error("custom bearing needs --n-elements, --ball-mm and --pitch-mm together")
     try:
         code: int = args.func(args)
-    except (ValueError, FileNotFoundError) as exc:
+    except (ValueError, FileNotFoundError, ImportError) as exc:
         parser.exit(2, f"pumpguard: error: {exc}\n")
     return code
