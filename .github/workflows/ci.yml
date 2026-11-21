@@ -65,7 +65,7 @@ jobs:
         run: >-
           python examples/leakage_experiment.py --levels 0.05 1.0 --repeats 1
           --machines 3 --segments 3 --out outputs/ci_leakage.png
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         with:
           name: coverage-xml
@@ -107,7 +107,7 @@ jobs:
           /tmp/smoke/bin/pumpguard demo --condition bearing_outer --out smoke_out
           /tmp/smoke/bin/python -m pumpguard.demo --condition imbalance --out smoke_out --no-plot
           test -f smoke_out/bearing_outer_signal.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
