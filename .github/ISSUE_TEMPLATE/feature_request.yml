@@ -1,0 +1,27 @@
+name: Feature or research proposal
+description: Suggest a feature, a new synthetic condition, or a research direction
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or research question
+      description: What are you trying to learn or do that the project cannot do today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: Include references (papers, standards, textbooks) for any physical model.
+    validations:
+      required: true
+  - type: textarea
+    id: assumptions
+    attributes:
+      label: Assumptions and limitations
+      description: What does the approach assume, and where would it break down?
+  - type: textarea
+    id: validation
+    attributes:
+      label: How could this be tested or validated?

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Environments
+.venv/
+venv/
+.env
+
+# Tooling caches and reports
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Generated results
+outputs/
+
+# Data: keep the folder and its README, never the data itself
+data/*
+!data/README.md
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,4 +1,4 @@
-numpy>=1.24
-pandas>=2.0
-matplotlib>=3.7
-scipy>=1.10
+# Dependencies are declared in pyproject.toml (single source of truth).
+# This file exists for tools that expect it (Binder, Colab, some IDEs).
+# For development, prefer:  pip install -e ".[dev]"
+-e .

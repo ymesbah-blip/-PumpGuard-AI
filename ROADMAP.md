@@ -1,0 +1,50 @@
+# Roadmap
+
+Each milestone ends with something reproducible: code, tests, and a short write-up of what
+was learned **and what was not shown**.
+
+## ✅ v0.2: Solid foundation (this release)
+Installable package, CLI, frequency-domain and envelope features, bearing kinematics, richer
+synthetic conditions, leakage-aware dataset builder, CI, community files.
+
+## v0.3: First real data
+- Loader for one public bearing dataset (download at runtime, checksum, license notice,
+  dataset card, `group_id` per recording).
+- Resampling utilities and per-dataset sampling-rate handling.
+- Notebook: do the synthetic-data features behave the same on measured data?
+
+## v0.4: Baseline models with honest evaluation
+- Optional `[ml]` extra (scikit-learn).
+- Baselines: threshold rules, logistic regression, random forest on transparent features.
+- Leakage-safe evaluation: group split, cross-validation by group, confusion matrix,
+  per-class precision/recall/F1, confidence intervals.
+- Experiment: the same model evaluated with a random split vs a group split (research
+  question on leakage).
+
+## v0.5: Robustness and explainability
+- Sensitivity to noise, speed variation and severity (severity sweeps are already
+  supported by the generator).
+- Kurtogram / spectral-kurtosis band selection for envelope analysis.
+- Compare model attributions with physically expected features (e.g. BPFI ratio for an
+  inner-race fault).
+- Model card for every published baseline.
+
+## v0.6: Digital-twin prototype
+- State model: operating point (speed, flow, head) → expected vibration signature.
+- Degradation trajectories (severity over time) and remaining-useful-life experiments,
+  clearly labelled synthetic.
+- Uncertainty-aware comparison of measured vs expected signatures.
+
+## v1.0: Stable API
+- Documented, versioned public API with deprecation policy.
+- Documentation site (MkDocs) with tutorials.
+- Engineering validation report against measured data, including limitations.
+
+## Good first issues
+
+- Add a bearing preset with a cited source (e.g. a 6203 or 6305 bearing).
+- Add `--waveform-seconds` to `pumpguard demo`.
+- Add a `misalignment` example figure to the docs.
+- Add an `rms_velocity` feature (integrate acceleration to velocity in the frequency domain,
+  10–1000 Hz band) with an analytic test.
+- Translate the README quick start into Arabic or French (`docs/i18n/`).

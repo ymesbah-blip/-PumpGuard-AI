@@ -1,82 +1,150 @@
 # PumpGuard AI
 
-**An open-source starter project for rotating machinery condition monitoring, predictive maintenance, and digital-twin experimentation.**
+**An open-source, educational toolkit for centrifugal-pump vibration monitoring: transparent
+synthetic signals, physically meaningful features, and leakage-aware data tools, built as a
+reproducible foundation for predictive-maintenance and digital-twin research.**
 
-PumpGuard AI is a learning and research prototype focused on centrifugal-pump health monitoring. It combines a transparent synthetic vibration-data generator, basic signal features, and a simple baseline health indicator. The goal is to build a reproducible engineering workflow before experimenting with real datasets, machine learning models, and digital-twin approaches.
+![Python](https://img.shields.io/badge/python-3.10%E2%80%933.13-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-pre--alpha-orange)
+![Typed](https://img.shields.io/badge/typing-mypy%20strict-informational)
 
-> **Status:** Early research prototype. This project does not diagnose real equipment and is not intended for operational or safety decisions.
+> **Status:** early research prototype. PumpGuard AI does **not** diagnose real equipment and
+> is not intended for operational or safety decisions. All bundled signals are **synthetic**.
 
-## What is included
+![Overview of a synthetic inner-race defect: waveform, spectrum and envelope spectrum](docs/images/bearing_inner_overview.png)
 
-- Synthetic vibration signal generation for illustrative healthy / imbalance / bearing-like patterns
-- Basic time-domain signal features (RMS, peak, crest factor, kurtosis)
-- A simple, explainable baseline health score (demonstration only)
-- CSV export and a plot of the generated signal
-- Clear roadmap toward real datasets, model evaluation, and a digital twin
+*Synthetic inner-race defect. The envelope spectrum (bottom) peaks at BPFI with ±1x sidebands,
+the classic signature of a defect rotating through the load zone.*
+
+## What's included
+
+- **Synthetic generator** with six conditions (`healthy`, `imbalance`, `misalignment`,
+  `bearing_outer`, `bearing_inner`, `cavitation_like`), a vane-pass tone, adjustable severity,
+  noise, speed, vane count, resonance and slip. Fully seeded and documented in
+  [docs/synthetic-model.md](docs/synthetic-model.md).
+- **Bearing kinematics:** BPFO, BPFI, FTF and BSF from geometry (6205 preset included).
+- **Features:**
+  - *time domain:* RMS, peak, crest factor, kurtosis, skewness, shape/impulse/clearance factors;
+  - *frequency domain:* 1x/2x/3x and vane-pass amplitudes, spectral centroid, high-frequency
+    energy ratio;
+  - *envelope analysis:* peak ratios at BPFO and BPFI.
+- **Leakage-aware datasets:** labelled feature tables built from "virtual machines", plus a
+  group-based train/test split.
+- **Works on your own data:** analyse any `time_s, vibration` CSV from the command line.
+- **Provenance:** every synthetic file gets a JSON sidecar with `"synthetic": true` and the full
+  generator configuration.
+- **Engineering hygiene:** 105 tests (analytic checks, not just smoke tests), CI on
+  Linux/Windows/macOS for Python 3.10–3.13, ruff, strict mypy, pre-commit.
 
 ## Quick start
 
 ```bash
+git clone https://github.com/ymesbah-blip/-PumpGuard-AI.git
+cd -PumpGuard-AI
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-python -m pumpguard.demo --condition healthy
+# Windows: .venv\Scripts\activate    macOS/Linux: source .venv/bin/activate
+pip install -e .
+pumpguard demo --condition bearing_outer
 ```
 
-Run from the repository root. For other examples:
+This prints the features and writes `outputs/bearing_outer_signal.{csv,json,png}`. The
+older form `python -m pumpguard.demo --condition healthy` still works.
+
+## Command line
 
 ```bash
-python -m pumpguard.demo --condition imbalance
-python -m pumpguard.demo --condition bearing_like
+pumpguard demo --condition misalignment --rpm 2950 --severity 0.7 --seed 1
+pumpguard features path/to/recording.csv --rpm 1480 --bearing 6205   # your own data
+pumpguard dataset --machines 4 --segments 5 --out outputs/features.csv
+pumpguard bearing --rpm 1800                                         # BPFO, BPFI, FTF, BSF
+pumpguard bearing --rpm 1800 --n-elements 8 --ball-mm 7.1 --pitch-mm 33.5
+pumpguard --help
 ```
 
-The demo writes a CSV file under `outputs/` and saves a signal plot.
+`features` reads a CSV with columns `time_s` and `vibration`. It takes the sampling rate from
+`--fs`, then the JSON sidecar, then the time column. Without `--rpm`, shaft-order and bearing
+features are skipped.
+
+## Python API
+
+```python
+from pumpguard import SignalConfig, simulate, extract_all_features
+from pumpguard.dataset import make_synthetic_dataset, group_train_test_split
+
+sig = simulate(SignalConfig(condition="bearing_inner", rpm=1800, severity=0.8, seed=7))
+feats = extract_all_features(sig.x, sig.fs, rpm=1800, n_vanes=5, bearing=sig.config.bearing)
+print(round(feats["env_bpfi_ratio"], 1), sig.metadata()["synthetic"])
+
+df = make_synthetic_dataset(machines_per_condition=4, segments_per_machine=5, seed=0)
+train, test = group_train_test_split(df, test_fraction=0.25)  # no machine in both sets
+```
+
+## Which feature reveals which condition?
+
+![Strip charts of six features across the six synthetic conditions](docs/images/feature_separation.png)
+
+On this synthetic data, RMS (the basis of the toy health score) flags imbalance and
+misalignment but barely moves for bearing defects. Kurtosis and the envelope ratios catch the
+bearing defects, and the 2x amplitude singles out misalignment. Reproduce the figure with
+`python examples/compare_conditions.py`. The signals were designed to show these patterns, so
+this is a teaching result, not evidence of real-world performance.
+
+| Condition | Main synthetic signature | Most telling features |
+|---|---|---|
+| imbalance | strong 1x | `amp_1x`, `rms` |
+| misalignment | 2x larger than 1x | `amp_2x` |
+| bearing_outer | impacts at BPFO | `env_bpfo_ratio`, `kurtosis` |
+| bearing_inner | impacts at BPFI, modulated at 1x | `env_bpfi_ratio` |
+| cavitation_like | bursty broadband 2–5 kHz | `hf_energy_ratio` |
 
 ## Project structure
 
 ```text
 pumpguard-ai/
-├── README.md
-├── LICENSE
-├── requirements.txt
-├── .gitignore
-├── src/pumpguard/
-│   ├── __init__.py
-│   ├── signals.py
-│   ├── features.py
-│   └── demo.py
-├── data/                 # Place datasets here; large data is not committed
-├── notebooks/             # Exploratory work
-├── tests/
-└── outputs/               # Generated results (ignored by Git)
+├── src/pumpguard/          # the package (see docs/architecture.md)
+├── tests/                  # pytest suite
+├── examples/               # runnable scripts
+├── docs/                   # model description, architecture, dataset/model card templates
+├── data/                   # local datasets (not committed)
+├── notebooks/              # exploratory work
+├── .github/                # CI, release workflow, issue/PR templates
+├── pyproject.toml          # metadata, dependencies, tool configuration
+├── CHANGELOG.md  ROADMAP.md  CONTRIBUTING.md  CODE_OF_CONDUCT.md  SECURITY.md  CITATION.cff
+└── LICENSE
 ```
 
 ## Data and reproducibility
 
-The included signal generator is **synthetic** and is not a substitute for measured machine data. Use a fixed random seed for reproducible examples. When real datasets are added, document the source, license, machine configuration, sampling rate, sensor location, and labeling method.
+The included generator is **synthetic** and no substitute for measured machine data. Every
+random draw is seeded, and identical configurations give identical signals (tested). When you
+use real datasets, fill in a [dataset card](docs/dataset-card-template.md): source, license,
+machine configuration, sampling rate, sensor location and labelling method. Always split by
+machine or recording (`group_id`), never by segment, or reported accuracy will be inflated.
 
+## Roadmap
 
-## Planned research roadmap
-
-1. **Signal processing:** FFT spectra, envelope analysis, filtering, and frequency-domain features.
-2. **Open datasets:** Add a documented loader for a suitable public bearing/pump dataset; respect dataset terms and licenses.
-3. **Machine learning:** Establish baseline classifiers, train/validation/test separation, and metrics (precision, recall, F1, confusion matrix).
-4. **Explainability:** Compare model outputs with physically interpretable features and failure-mode assumptions.
-5. **Digital twin prototype:** Represent operating state, sensor inputs, model predictions, and uncertainty in a modular simulation.
-6. **Engineering validation:** Compare results with measured data and clearly state limitations before making any reliability claims.
+v0.3 adds the first public dataset loader, v0.4 baseline models with leakage-safe evaluation,
+v0.5 robustness and explainability, and v0.6 a digital-twin prototype. Details and good first
+issues are in [ROADMAP.md](ROADMAP.md).
 
 ## Research questions
 
-- Which vibration features are useful for distinguishing operating conditions in a centrifugal-pump test dataset?
-- How does the baseline perform when noise and operating speed vary?
-- Can a lightweight digital-twin prototype combine measured signals with a simplified physical model?
-- What is the impact of data leakage and class imbalance on reported diagnostic performance?
+- Which vibration features distinguish operating conditions in a centrifugal-pump dataset?
+- How do the features and baselines behave as noise, speed and fault severity vary?
+- Can a lightweight digital twin combine measured signals with a simplified physical model?
+- How much do data leakage and class imbalance inflate reported diagnostic performance?
 
-## Contributions
+## Contributing
 
-Issues and pull requests are welcome. Please include reproducible examples, explain the engineering assumptions, and avoid claims of real-world accuracy without validation.
+Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md). In short:
+include reproducible examples and tests, state your engineering assumptions, and make no claim
+of real-world accuracy without validation.
 
+## Citation
+
+If you use PumpGuard AI in research, please cite it using [CITATION.cff](CITATION.cff).
 
 ## License
-MIT — see `LICENSE`.
+
+MIT. See [LICENSE](LICENSE).
