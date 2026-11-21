@@ -255,3 +255,18 @@ def test_relative_flow_and_range_flags():
     r = solve_operating_point(plain, well, 3600.0)
     assert r.relative_flow is None
     assert r.in_operating_range is None
+
+
+@pytest.mark.parametrize("gravity", [0.0, -1.0, float("nan"), float("inf")])
+def test_invalid_gravity_rejected_at_si_boundary(gravity):
+    """Reject nonphysical gravity rather than corrupt computed head and power."""
+    with pytest.raises(ValueError, match="g must be"):
+        head_from_pressure(100000.0, 1000.0, g=gravity)
+    with pytest.raises(ValueError, match="g must be"):
+        pressure_from_head(10.0, 1000.0, g=gravity)
+    with pytest.raises(ValueError, match="g must be"):
+        hydraulic_power_w(0.01, 10.0, 1000.0, g=gravity)
+    with pytest.raises(ValueError, match="g must be"):
+        npsh_available_m(100000.0, 2000.0, 1000.0, g=gravity)
+    with pytest.raises(ValueError, match="g must be"):
+        WellSystem(1e7, 1e-10, 1e6, 500.0, 900.0, g=gravity)

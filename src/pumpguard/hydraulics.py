@@ -63,13 +63,15 @@ def head_from_pressure(
 ) -> float:
     """Head in metres of fluid: H = dp / (rho g)."""
     rho = _finite("density_kg_m3", density_kg_m3, minimum=0, strict=True)
-    return _finite("delta_p_pa", delta_p_pa) / (rho * g)
+    grav = _finite("g", g, minimum=0, strict=True)
+    return _finite("delta_p_pa", delta_p_pa) / (rho * grav)
 
 
 def pressure_from_head(head_m: float, density_kg_m3: float, g: float = STANDARD_GRAVITY) -> float:
     """Pressure in Pa: dp = rho g H."""
     rho = _finite("density_kg_m3", density_kg_m3, minimum=0, strict=True)
-    return rho * g * _finite("head_m", head_m)
+    grav = _finite("g", g, minimum=0, strict=True)
+    return rho * grav * _finite("head_m", head_m)
 
 
 def hydraulic_power_w(
@@ -78,7 +80,8 @@ def hydraulic_power_w(
     """Hydraulic (water) power P = rho g Q H in watts."""
     q = _finite("flow_m3_s", flow_m3_s, minimum=0)
     rho = _finite("density_kg_m3", density_kg_m3, minimum=0, strict=True)
-    return rho * g * q * _finite("head_m", head_m)
+    grav = _finite("g", g, minimum=0, strict=True)
+    return rho * grav * q * _finite("head_m", head_m)
 
 
 def affinity_scale(
@@ -116,7 +119,8 @@ def npsh_available_m(
     pv = _finite("vapor_pressure_pa", vapor_pressure_pa, minimum=0)
     rho = _finite("density_kg_m3", density_kg_m3, minimum=0, strict=True)
     v = _finite("velocity_m_s", velocity_m_s)
-    return (p - pv) / (rho * g) + v**2 / (2 * g)
+    grav = _finite("g", g, minimum=0, strict=True)
+    return (p - pv) / (rho * grav) + v**2 / (2 * grav)
 
 
 # --------------------------------------------------------- operating point
@@ -332,6 +336,7 @@ class WellSystem:
         _finite("wellhead_pressure_pa", self.wellhead_pressure_pa, minimum=0)
         _finite("lift_height_m", self.lift_height_m, minimum=0)
         _finite("density_kg_m3", self.density_kg_m3, minimum=0, strict=True)
+        _finite("g", self.g, minimum=0, strict=True)
         _finite("friction_pa_per_m3s2", self.friction_pa_per_m3s2, minimum=0)
         _finite("intake_offset_pa", self.intake_offset_pa, minimum=0)
         if self.intake_offset_pa >= self.reservoir_pressure_pa:
