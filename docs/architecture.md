@@ -12,7 +12,12 @@ src/pumpguard/
 ├── dataset.py     make_synthetic_dataset, group_train_test_split
 ├── io.py          save_signal / load_signal (CSV + JSON sidecar)
 ├── plotting.py    plot_signal_overview (Matplotlib OO API, headless-safe)
-├── datasets/      provenance.py (schema + validation), paderborn.py (local-file loader)
+├── units.py       SI conversions (BPD, ft, bar, psi, temperature)
+├── hydraulics.py  OperatingPoint, PumpCurve, WellSystem, solve_operating_point (mechanism)
+├── orders.py      shaft / vane-pass frequencies, rpm from VSD frequency (mechanism)
+├── sensors.py     SensorSpec, observability checks, measure() (sensor)
+├── regime.py      synthetic speed sweeps, naive-projection error
+├── datasets/      provenance.py (schema), paderborn.py (bearing files), scada.py (trend logs)
 ├── baselines.py   transparent non-ML baselines (threshold, envelope rule, nearest centroid)
 ├── evaluation.py  group k-fold, metrics, group-bootstrap intervals
 ├── benchmark.py   leakage-safe benchmark + Markdown/JSON report

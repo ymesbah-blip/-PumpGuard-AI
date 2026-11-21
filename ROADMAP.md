@@ -11,9 +11,12 @@ synthetic conditions, leakage-aware dataset builder, CI, community files.
 - Paderborn KAt loader for local files (no redistribution), dataset card, provenance validation.
 - Leakage-safe benchmark of transparent baselines with group-bootstrap intervals and a
   pre-registered protocol.
+- Pump/ESP hydraulics: operating point as pump ∩ system curve, orders vs sensor observability,
+  typed SCADA loader with time-block splits, lab rig plan.
 - **Still open:** first run on the real files (confirm units, channel names, durations), then
   publish `report.md` for `real3` and `artificial_to_real`. Notebook comparing synthetic and
-  measured feature behaviour.
+  measured feature behaviour. Fit a `PumpCurve` from real catalog points and validate
+  `solve_operating_point` against a measured well test.
 
 ## v0.4: Baseline models with honest evaluation
 - Optional `[ml]` extra (scikit-learn).

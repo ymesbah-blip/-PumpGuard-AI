@@ -8,7 +8,8 @@ All notable changes are documented here. The format follows
 
 ## [0.3.0] - unreleased
 
-First opt-in path to real measurements (closes the scope of issue #3).
+First opt-in path to real measurements (scope of issue #3) and a mechanically interpretable
+pump/ESP layer (scope of issue #4).
 
 ### Added
 - `pumpguard.datasets.provenance`: required provenance schema for every recording,
@@ -31,6 +32,24 @@ First opt-in path to real measurements (closes the scope of issue #3).
 - `6203` bearing preset (8 balls, 6.75 mm, pitch 28.55 mm).
 - Docs: Paderborn dataset card, benchmark protocol written before any real result.
 - Example `examples/benchmark_paderborn.py`; 72 new tests using only invented `.mat` fixtures.
+
+#### Pump operating point, orders and sensors (issue #4)
+- `pumpguard.units`: exact SI conversions (BPD, ft, bar, psi, temperature).
+- `pumpguard.hydraulics`: typed `OperatingPoint` with derived hydraulic power, efficiency and
+  NPSH margin. Inconsistent data (efficiency > 1) is rejected. Also adds `PumpCurve`
+  (multistage, affinity-scaled, invertible, no extrapolation), `WellSystem` (linear IPR, static
+  lift, friction) and `solve_operating_point`, which finds the pump/system intersection.
+- `pumpguard.orders` (mechanism): shaft and vane-pass frequencies, rpm from VSD frequency with
+  poles and slip.
+- `pumpguard.sensors` (sensor): `SensorSpec`, observability checks (Nyquist, anti-alias,
+  2.56× margin), voltage-to-acceleration conversion, `measure()` for simulating acquisition.
+- `pumpguard.regime`: synthetic speed sweep (consistent intersections), speed × flow grid, and
+  `naive_affinity_projection` to quantify the error of Q ∝ f / Δp ∝ f² projections.
+- `pumpguard.datasets.scada`: typed SCADA CSV loader (units, finite values, logging interval,
+  gaps) and `time_block_split` (by day, chronological, optional embargo).
+- Docs `esp-operating-point.md` and `lab-rig-plan.md` (instrumentation, acquisition IDs,
+  rig-to-dataset path, safety boundaries, claim limits). Example
+  `examples/esp_operating_regime.py` with figure. 64 exact and property tests.
 
 ### Fixed
 - README clone instructions: `cd -PumpGuard-AI` fails because `cd` reads the leading `-` as an
