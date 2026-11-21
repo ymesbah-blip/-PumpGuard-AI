@@ -6,7 +6,11 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
-Roadmap v0.4 groundwork: learned models judged against the baselines, and the random-split vs
+No changes yet.
+
+## [0.4.0] - 2026-11-21
+
+Research-preview v0.4 includes: learned models judged against the baselines, and the random-split vs
 group-split experiment.
 
 ### Added
@@ -36,7 +40,7 @@ group-split experiment.
 - CI installs `.[dev,ml]`, runs the learned benchmark and the leakage experiment, and adds a
   core-only job without scikit-learn.
 
-## [0.3.0] - unreleased
+## [0.3.0] - development milestone (included in v0.4.0)
 
 First opt-in path to real measurements (scope of issue #3) and a mechanically interpretable
 pump/ESP layer (scope of issue #4).

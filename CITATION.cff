@@ -4,13 +4,14 @@ title: "PumpGuard AI: an educational open-source toolkit for centrifugal-pump vi
 type: software
 authors:
   - name: "PumpGuard AI contributors"
-version: 0.3.0
+version: 0.4.0
 license: MIT
 abstract: >-
   PumpGuard AI is a research and teaching prototype for rotating-machinery condition
   monitoring. It provides a transparent synthetic vibration generator for centrifugal
   pumps, time-domain, spectral and envelope-analysis features, bearing defect
-  frequencies, and leakage-aware dataset utilities. It is not validated for diagnosing
+  frequencies, leakage-aware dataset utilities, optional learned-model baselines and a
+  machine-level data-leakage demonstration. It is not validated for diagnosing
   real equipment.
 keywords:
   - condition monitoring

@@ -26,6 +26,8 @@ jobs:
           path: dist/
 
   publish:
+    # Explicit opt-in and a separate PyPI trusted publisher are required.
+    if: ${{ vars.ENABLE_PYPI_PUBLISH == 'true' }}
     needs: build
     runs-on: ubuntu-latest
     environment: pypi

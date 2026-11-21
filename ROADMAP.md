@@ -7,7 +7,7 @@ was learned **and what was not shown**.
 Installable package, CLI, frequency-domain and envelope features, bearing kinematics, richer
 synthetic conditions, leakage-aware dataset builder, CI, community files.
 
-## ✅ v0.3: First real data (this release)
+## ✅ v0.3: Local data integration code (not experimentally validated)
 - Paderborn KAt loader for local files (no redistribution), dataset card, provenance validation.
 - Leakage-safe benchmark of transparent baselines with group-bootstrap intervals and a
   pre-registered protocol.
@@ -18,7 +18,7 @@ synthetic conditions, leakage-aware dataset builder, CI, community files.
   measured feature behaviour. Fit a `PumpCurve` from real catalog points and validate
   `solve_operating_point` against a measured well test.
 
-## v0.4: Baseline models with honest evaluation (in progress)
+## ✅ v0.4: Learned models and honest evaluation (research preview)
 - ✅ Optional `[ml]` extra (scikit-learn).
 - ✅ Learned models (logistic regression, random forest) on the same transparent features, judged
   against the v0.3 baselines under the unchanged protocol (amendment 1: fixed hyperparameters,

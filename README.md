@@ -39,7 +39,7 @@ the classic signature of a defect rotating through the load zone.*
   point, multistage pump curve with affinity laws, well system curve (IPR + lift + friction),
   operating point as the intersection of the two, shaft and vane-pass orders kept separate from
   sensor observability checks, and a typed SCADA loader with time-block splits.
-- **Learned models and a leakage experiment (v0.4 work, optional `[ml]` extra):** logistic
+- **Learned models and a leakage experiment (v0.4 research preview, optional `[ml]` extra):** logistic
   regression and a random forest with fixed hyperparameters, judged against the baselines on the
   same folds with a pre-registered decision rule, plus an experiment that measures how much a
   random segment split overstates the group-split score.
@@ -196,9 +196,9 @@ machine or recording (`group_id`), never by segment, or reported accuracy will b
 
 ## Roadmap
 
-v0.3 (this release) adds the Paderborn loader, provenance validation and the leakage-safe
-baseline benchmark. v0.4 work has started: learned models judged against those baselines and
-the random-vs-group split experiment. Still open for v0.4: results on real files and a second
+v0.3 groundwork added the Paderborn loader, provenance validation and the leakage-safe
+baseline benchmark. v0.4.0 adds: learned models judged against those baselines and
+the random-vs-group split experiment. Still open after v0.4.0: independent real-data validation and a second
 dataset. Then v0.5 robustness
 and explainability, v0.6 a digital-twin prototype. Details and good first
 issues are in [ROADMAP.md](ROADMAP.md).
