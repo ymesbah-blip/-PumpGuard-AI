@@ -16,6 +16,11 @@ validated. It describes the code as implemented in v0.3.
 | Spectral centroid, `hf_energy_ratio` | from a Hann-windowed periodogram (not Welch averaging); power above 1 kHz / total non-DC power | Hz, – |
 | Envelope ratio (`env_bpfo_ratio`, `env_bpfi_ratio`) | 4th-order zero-phase Butterworth band-pass (default 0.1–0.4 fs), Hilbert magnitude, amplitude spectrum; peak within ±max(3 bins, 2 %) of the defect frequency divided by the median envelope-spectrum level over (0, 5 × f_defect] | – |
 | Bearing defect frequencies | kinematic formulas without slip (`bearings.py`) | Hz |
+| Head from pressure | H = Δp / (ρ g), g = 9.80665 m/s² unless given | m |
+| Hydraulic power | P = ρ g Q H | W |
+| Multistage pump head | n · (N/N0)² · h_stage(Q·N0/N), catalog range only | m |
+| Operating point | Q where pump head = system required head (Brent) | m³/s |
+| Shaft / vane-pass frequency | rpm/60; n_vanes · rpm/60; rpm = 120 f/p · (1 − slip) | Hz |
 
 The **toy health score** uses RMS only and has **no calibration**. It is not remaining useful
 life, a fault probability or an alarm criterion. It is deliberately blind to early bearing

@@ -35,9 +35,13 @@ the classic signature of a defect rotating through the load zone.*
 - **Real measurements, opt-in (v0.3):** loader for the Paderborn KAt bearing dataset (files you
   download yourself; never bundled), validated provenance records, and a leakage-safe benchmark
   of transparent baselines with bearing-level confidence intervals.
+- **Pump hydraulics and ESP operating point (v0.3):** SI unit conversions, typed operating
+  point, multistage pump curve with affinity laws, well system curve (IPR + lift + friction),
+  operating point as the intersection of the two, shaft and vane-pass orders kept separate from
+  sensor observability checks, and a typed SCADA loader with time-block splits.
 - **Provenance:** every synthetic file gets a JSON sidecar with `"synthetic": true` and the full
   generator configuration.
-- **Engineering hygiene:** 177 tests (analytic checks, not just smoke tests), CI on
+- **Engineering hygiene:** 241 tests (analytic checks, not just smoke tests), CI on
   Linux/Windows/macOS for Python 3.10–3.13, ruff, strict mypy, pre-commit.
 
 ## Quick start
@@ -106,6 +110,17 @@ result: [docs/benchmark-protocol.md](docs/benchmark-protocol.md). Dataset facts 
 
 > This is a **bearing test rig**, not a centrifugal pump. Results on it do not validate pump
 > diagnosis.
+
+## Pump operating point (ESP focus)
+
+![Synthetic ESP operating points: pump curves at 45-60 Hz, system curve, intersections and naive projections](docs/images/esp_operating_regime.png)
+
+At each drive frequency the operating point is where the speed-scaled pump curve meets the
+well's system curve. Projecting one measured point with "Q ∝ f, Δp ∝ f²" (orange) gives points
+the well cannot sustain, because the static lift does not scale with speed. Details, units,
+limits and what one-minute SCADA vibration can and cannot show:
+[docs/esp-operating-point.md](docs/esp-operating-point.md). Plan for collecting real data
+safely: [docs/lab-rig-plan.md](docs/lab-rig-plan.md). Invented pump and well; not field data.
 
 ## Which feature reveals which condition?
 
