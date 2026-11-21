@@ -53,6 +53,8 @@ jobs:
       - run: pytest --cov --cov-report=term --cov-report=xml
       - name: Example script runs
         run: python examples/compare_conditions.py --machines 2 --segments 2 --out outputs/ci_example.png
+      - name: Benchmark dry run (synthetic)
+        run: pumpguard benchmark --synthetic --n-boot 200 --out outputs/ci_benchmark
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         with:

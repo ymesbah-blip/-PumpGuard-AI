@@ -6,8 +6,8 @@ PumpGuard AI is a pre-alpha research prototype. Only the latest release receives
 
 | Version | Supported |
 |---------|-----------|
-| 0.2.x   | ✅        |
-| < 0.2   | ❌        |
+| 0.3.x   | ✅        |
+| < 0.3   | ❌        |
 
 ## Reporting a vulnerability
 

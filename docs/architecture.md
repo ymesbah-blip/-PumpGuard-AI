@@ -12,7 +12,11 @@ src/pumpguard/
 ├── dataset.py     make_synthetic_dataset, group_train_test_split
 ├── io.py          save_signal / load_signal (CSV + JSON sidecar)
 ├── plotting.py    plot_signal_overview (Matplotlib OO API, headless-safe)
-├── cli.py         `pumpguard` command (demo, features, dataset, bearing)
+├── datasets/      provenance.py (schema + validation), paderborn.py (local-file loader)
+├── baselines.py   transparent non-ML baselines (threshold, envelope rule, nearest centroid)
+├── evaluation.py  group k-fold, metrics, group-bootstrap intervals
+├── benchmark.py   leakage-safe benchmark + Markdown/JSON report
+├── cli.py         `pumpguard` command (demo, features, dataset, bearing, paderborn, benchmark)
 ├── demo.py        legacy `python -m pumpguard.demo` entry point
 └── _validation.py shared input checks
 ```

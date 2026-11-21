@@ -3,21 +3,23 @@
 Each milestone ends with something reproducible: code, tests, and a short write-up of what
 was learned **and what was not shown**.
 
-## ✅ v0.2: Solid foundation (this release)
+## ✅ v0.2: Solid foundation
 Installable package, CLI, frequency-domain and envelope features, bearing kinematics, richer
 synthetic conditions, leakage-aware dataset builder, CI, community files.
 
-## v0.3: First real data
-- Loader for one public bearing dataset (download at runtime, checksum, license notice,
-  dataset card, `group_id` per recording).
-- Resampling utilities and per-dataset sampling-rate handling.
-- Notebook: do the synthetic-data features behave the same on measured data?
+## ✅ v0.3: First real data (this release)
+- Paderborn KAt loader for local files (no redistribution), dataset card, provenance validation.
+- Leakage-safe benchmark of transparent baselines with group-bootstrap intervals and a
+  pre-registered protocol.
+- **Still open:** first run on the real files (confirm units, channel names, durations), then
+  publish `report.md` for `real3` and `artificial_to_real`. Notebook comparing synthetic and
+  measured feature behaviour.
 
 ## v0.4: Baseline models with honest evaluation
 - Optional `[ml]` extra (scikit-learn).
-- Baselines: threshold rules, logistic regression, random forest on transparent features.
-- Leakage-safe evaluation: group split, cross-validation by group, confusion matrix,
-  per-class precision/recall/F1, confidence intervals.
+- Learned models (logistic regression, random forest) on the same transparent features, judged
+  against the v0.3 baselines under the unchanged benchmark protocol.
+- Second dataset with a different rig, to test whether conclusions transfer.
 - Experiment: the same model evaluated with a random split vs a group split (research
   question on leakage).
 

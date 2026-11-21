@@ -28,6 +28,8 @@ outputs/
 # Data: keep the folder and its README, never the data itself
 data/*
 !data/README.md
+*.mat
+*.rar
 
 # OS / editors
 .DS_Store
