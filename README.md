@@ -32,16 +32,19 @@ the classic signature of a defect rotating through the load zone.*
 - **Leakage-aware datasets:** labelled feature tables built from "virtual machines", plus a
   group-based train/test split.
 - **Works on your own data:** analyse any `time_s, vibration` CSV from the command line.
+- **Real measurements, opt-in (v0.3):** loader for the Paderborn KAt bearing dataset (files you
+  download yourself; never bundled), validated provenance records, and a leakage-safe benchmark
+  of transparent baselines with bearing-level confidence intervals.
 - **Provenance:** every synthetic file gets a JSON sidecar with `"synthetic": true` and the full
   generator configuration.
-- **Engineering hygiene:** 105 tests (analytic checks, not just smoke tests), CI on
+- **Engineering hygiene:** 177 tests (analytic checks, not just smoke tests), CI on
   Linux/Windows/macOS for Python 3.10–3.13, ruff, strict mypy, pre-commit.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/ymesbah-blip/-PumpGuard-AI.git
-cd -PumpGuard-AI
+git clone https://github.com/ymesbah-blip/-PumpGuard-AI.git pumpguard-ai
+cd pumpguard-ai   # the repository name starts with "-", which `cd` would read as an option
 python -m venv .venv
 # Windows: .venv\Scripts\activate    macOS/Linux: source .venv/bin/activate
 pip install -e .
@@ -59,6 +62,7 @@ pumpguard features path/to/recording.csv --rpm 1480 --bearing 6205   # your own 
 pumpguard dataset --machines 4 --segments 5 --out outputs/features.csv
 pumpguard bearing --rpm 1800                                         # BPFO, BPFI, FTF, BSF
 pumpguard bearing --rpm 1800 --n-elements 8 --ball-mm 7.1 --pitch-mm 33.5
+pumpguard benchmark --synthetic                                      # pipeline dry run
 pumpguard --help
 ```
 
@@ -79,6 +83,29 @@ print(round(feats["env_bpfi_ratio"], 1), sig.metadata()["synthetic"])
 df = make_synthetic_dataset(machines_per_condition=4, segments_per_machine=5, seed=0)
 train, test = group_train_test_split(df, test_fraction=0.25)  # no machine in both sets
 ```
+
+## Real measurements: Paderborn bearing data (opt-in)
+
+PumpGuard does not ship third-party data. To evaluate on real measurements, download the
+[Paderborn KAt bearing data](https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter)
+yourself (CC BY-NC 4.0: non-commercial use, citation required), extract the archives, then:
+
+```bash
+pumpguard paderborn index   data/paderborn                    # coverage per bearing/condition
+pumpguard paderborn inspect data/paderborn/K001/N15_M07_F10_K001_1.mat
+pumpguard paderborn features data/paderborn --task real3 --out outputs/pu_real3.csv
+pumpguard benchmark outputs/pu_real3.csv --out outputs/bench_real3
+```
+
+The benchmark splits by **physical bearing**, compares transparent baselines (majority class,
+single-feature threshold, envelope physics rule, nearest centroid), reports 95 % intervals from
+a bootstrap over bearings, lists the bearings and operating conditions that fail, and shows how
+much a leaky random split would inflate the score. The protocol was fixed before any real
+result: [docs/benchmark-protocol.md](docs/benchmark-protocol.md). Dataset facts and caveats:
+[dataset card](docs/datasets/paderborn-kat.md).
+
+> This is a **bearing test rig**, not a centrifugal pump. Results on it do not validate pump
+> diagnosis.
 
 ## Which feature reveals which condition?
 
@@ -124,8 +151,9 @@ machine or recording (`group_id`), never by segment, or reported accuracy will b
 
 ## Roadmap
 
-v0.3 adds the first public dataset loader, v0.4 baseline models with leakage-safe evaluation,
-v0.5 robustness and explainability, and v0.6 a digital-twin prototype. Details and good first
+v0.3 (this release) adds the Paderborn loader, provenance validation and the leakage-safe
+baseline benchmark. Next: v0.4 learned models judged against those baselines, v0.5 robustness
+and explainability, v0.6 a digital-twin prototype. Details and good first
 issues are in [ROADMAP.md](ROADMAP.md).
 
 ## Research questions

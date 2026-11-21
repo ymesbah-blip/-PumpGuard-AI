@@ -92,4 +92,9 @@ BEARING_PRESETS: dict[str, BearingGeometry] = {
     # 6205 deep-groove ball bearing: 9 balls, 7.94 mm ball diameter, 39.04 mm pitch
     # diameter. This geometry is widely used in public bearing-fault datasets.
     "6205": BearingGeometry(9, 7.94, 39.04, 0.0, "6205 deep-groove ball bearing"),
+    # 6203 deep-groove ball bearing as documented for the Paderborn KAt dataset
+    # (Lessmeier et al. 2016): 8 balls, 6.75 mm ball diameter, 28.55 mm pitch diameter.
+    # The publication notes 1-2 % variation of characteristic frequencies between
+    # manufacturers (FAG, MTK, IBU); catalogue values differ slightly too.
+    "6203": BearingGeometry(8, 6.75, 28.55, 0.0, "6203 deep-groove ball bearing"),
 }

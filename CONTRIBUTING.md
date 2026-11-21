@@ -68,10 +68,12 @@ Prefer tests that check physics or maths over tests that only check "it runs":
 
 ## Adding a dataset loader
 
-Open a *Dataset proposal* issue first. Loaders must download at runtime (never commit
-third-party data), verify a checksum, respect the license, ship a completed
+Open a *Dataset proposal* issue first. Loaders read files the user downloaded from a local
+path (never commit or download third-party data). They must validate every record with
+`pumpguard.datasets.validate_provenance`, offer SHA-256 checksums, ship a completed
 [dataset card](docs/dataset-card-template.md), and expose a `group_id` so evaluations can be
-split without leakage.
+split without leakage. Tests use only small invented fixtures that mimic the file format (see
+`tests/paderborn_fixtures.py`).
 
 ## Scientific integrity
 

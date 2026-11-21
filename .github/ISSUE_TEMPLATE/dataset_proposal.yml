@@ -12,7 +12,7 @@ body:
     id: license
     attributes:
       label: License / terms of use
-      description: Exact license. Loaders download data at runtime; we never commit third-party data.
+      description: Exact license. Loaders read user-downloaded files; we never commit or redistribute third-party data.
     validations:
       required: true
   - type: textarea

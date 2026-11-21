@@ -6,6 +6,44 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.0] - unreleased
+
+First opt-in path to real measurements (closes the scope of issue #3).
+
+### Added
+- `pumpguard.datasets.provenance`: required provenance schema for every recording,
+  `validate_provenance()` raising `ProvenanceError` with **all** problems listed.
+- `pumpguard.datasets.paderborn`: reader for locally downloaded Paderborn KAt bearing files
+  (CC BY-NC 4.0, never bundled). Covers the operating-condition and bearing tables from Lessmeier
+  et al. (2016), a filename parser, and a `.mat` reader that finds channels by name instead of
+  hard-coded struct indices. Also checks documented sampling rates and the 4 s duration, uses
+  the measured speed channel with a ±20 % plausibility check, skips corrupt files and reports
+  them, and builds a feature table with `group_id` = physical bearing.
+- Predefined tasks `real3`, `artificial_to_real` and `all_single`.
+- `pumpguard.baselines`: majority class, single-feature threshold, envelope physics rule,
+  nearest centroid. All numpy-only and able to describe the rule they learned.
+- `pumpguard.evaluation`: stratified group k-fold, random k-fold (for leakage checks only),
+  metrics, group-bootstrap confidence intervals.
+- `pumpguard.benchmark` and CLI `pumpguard benchmark`: detection and diagnosis tasks, 95 %
+  intervals over groups, per-group and per-condition failure modes, a leakage check, and a
+  Markdown + JSON report. `--synthetic` gives a dry run.
+- CLI `pumpguard paderborn index | inspect | features`.
+- `6203` bearing preset (8 balls, 6.75 mm, pitch 28.55 mm).
+- Docs: Paderborn dataset card, benchmark protocol written before any real result.
+- Example `examples/benchmark_paderborn.py`; 72 new tests using only invented `.mat` fixtures.
+
+### Fixed
+- README clone instructions: `cd -PumpGuard-AI` fails because `cd` reads the leading `-` as an
+  option. The repository is now cloned into `pumpguard-ai`.
+- `docs/datasets.md` and `docs/validation.md` described features that do not exist
+  (`--input-csv`, Welch PSD, order band power, a "4.2x impulse", three labels, crest factor 0).
+  Both now match the implementation.
+
+### Changed
+- Dataset policy: loaders read user-downloaded files from a local path; nothing is downloaded
+  automatically (licence terms stay with the user).
+- `.gitignore` excludes `*.mat` and `*.rar`.
+
 ## [0.2.0] - unreleased
 
 ### Fixed

@@ -4,7 +4,7 @@ title: "PumpGuard AI: an educational open-source toolkit for centrifugal-pump vi
 type: software
 authors:
   - name: "PumpGuard AI contributors"
-version: 0.2.0
+version: 0.3.0
 license: MIT
 abstract: >-
   PumpGuard AI is a research and teaching prototype for rotating-machinery condition

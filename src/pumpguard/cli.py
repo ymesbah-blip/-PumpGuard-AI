@@ -1,10 +1,12 @@
 """Command-line interface: ``pumpguard <command> [options]``.
 
 Commands:
-    demo      generate one synthetic signal, print features, save CSV/JSON/PNG
-    features  compute features for any signal CSV (time_s, vibration)
-    dataset   build a labelled synthetic feature table
-    bearing   print bearing defect frequencies for a shaft speed
+    demo       generate one synthetic signal, print features, save CSV/JSON/PNG
+    features   compute features for any signal CSV (time_s, vibration)
+    dataset    build a labelled synthetic feature table
+    bearing    print bearing defect frequencies for a shaft speed
+    paderborn  index / inspect / extract features from local Paderborn KAt files
+    benchmark  leakage-safe benchmark of transparent baselines on a feature table
 """
 
 from __future__ import annotations
@@ -172,6 +174,110 @@ def _cmd_bearing(args: argparse.Namespace) -> int:
     return 0
 
 
+_PADERBORN_NOTICE = (
+    "Paderborn KAt data: CC BY-NC 4.0 (non-commercial, attribution required). "
+    "Bearing test rig, not a centrifugal pump."
+)
+
+
+def _cmd_paderborn_index(args: argparse.Namespace) -> int:
+    from .datasets.paderborn import TASKS, scan
+
+    index, skipped = scan(args.root)
+    print(_PADERBORN_NOTICE)
+    print(f"Recognised files: {len(index)}   unrecognised .mat files: {len(skipped)}")
+    if len(index):
+        table = index.pivot_table(
+            index="bearing", columns="operating_condition", values="path", aggfunc="count"
+        ).fillna(0)
+        print(table.astype(int).to_string())
+    for name, spec in TASKS.items():
+        missing = sorted(spec.bearings - set(index["bearing"]))
+        status = "complete" if not missing else f"missing {len(missing)}: {', '.join(missing)}"
+        print(f"task {name:<20} {status}")
+    for item in skipped[:10]:
+        print(f"skipped {item['file']}: {item['reason']}", file=sys.stderr)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        index.drop(columns=["path"]).to_csv(out, index=False)
+        print(f"Saved index: {out}")
+    return 0
+
+
+def _cmd_paderborn_inspect(args: argparse.Namespace) -> int:
+    from .datasets.paderborn import inspect_file
+
+    rows = inspect_file(args.file)
+    print(f"{args.file}:")
+    print(f"  {'channel':<24}{'unit':<12}{'raster':<16}{'samples':>10}  documented fs")
+    for r in rows:
+        fs = "n/a" if r["documented_fs_hz"] is None else f"{r['documented_fs_hz']:g} Hz"
+        print(f"  {r['name']:<24}{r['unit']:<12}{r['raster']:<16}{r['n_samples']:>10}  {fs}")
+    return 0
+
+
+def _cmd_paderborn_features(args: argparse.Namespace) -> int:
+    from .datasets.paderborn import build_feature_table
+
+    def progress(i: int, total: int, name: str) -> None:
+        if i == 1 or i == total or i % 25 == 0:
+            print(f"  [{i}/{total}] {name}", file=sys.stderr)
+
+    print(_PADERBORN_NOTICE)
+    df, report = build_feature_table(
+        args.root,
+        task=args.task,
+        segment_seconds=args.segment_seconds,
+        conditions=args.conditions,
+        max_measurements=args.max_measurements,
+        envelope_band=tuple(args.envelope_band) if args.envelope_band else None,
+        expected_duration_s=args.expected_duration or None,
+        progress=progress,
+    )
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    sidecar = out.with_suffix(".json")
+    sidecar.write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")
+    print(
+        f"Saved {len(df)} segments from {report['n_files_used']} files "
+        f"({len(report['failures'])} failed) to {out}"
+    )
+    print(f"Saved provenance report: {sidecar}")
+    for failure in report["failures"][:10]:
+        print(f"  failed {failure['file']}: {failure['error']}", file=sys.stderr)
+    return 0
+
+
+def _cmd_benchmark(args: argparse.Namespace) -> int:
+    import pandas as pd
+
+    from .benchmark import run_benchmark, synthetic_feature_table, write_report
+
+    dataset: dict[str, object] | None
+    if args.synthetic:
+        df = synthetic_feature_table(seed=args.seed)
+        dataset = {"dataset_id": "synthetic", "task": "dry-run", "synthetic": True}
+    elif args.features is None:
+        raise ValueError("give a feature table CSV or --synthetic")
+    else:
+        df = pd.read_csv(args.features)
+        sidecar = Path(args.features).with_suffix(".json")
+        dataset = json.loads(sidecar.read_text(encoding="utf-8")) if sidecar.exists() else None
+    results = run_benchmark(df, n_splits=args.n_splits, n_boot=args.n_boot, seed=args.seed)
+    json_path, md_path = write_report(results, args.out, dataset)
+    for task, rows in results["tasks"].items():
+        for r in rows:
+            lo, hi = r["ci95"]["balanced_accuracy"]
+            print(
+                f"{task:<10} {r['baseline']:<26} balanced accuracy "
+                f"{r['metrics']['balanced_accuracy']:.3f}  [95% CI {lo:.2f}, {hi:.2f}]"
+            )
+    print(f"Saved report:  {md_path}\nSaved results: {json_path}")
+    return 0
+
+
 # -------------------------------------------------------------------- parser
 
 
@@ -231,6 +337,45 @@ def build_parser() -> argparse.ArgumentParser:
     br.add_argument("--rpm", type=float, required=True)
     _add_bearing_args(br, default_preset="6205")
     br.set_defaults(func=_cmd_bearing)
+
+    from .datasets.paderborn import OPERATING_CONDITIONS, TASKS
+
+    pb = sub.add_parser("paderborn", help="Paderborn KAt bearing data (local files only)")
+    pb_sub = pb.add_subparsers(dest="paderborn_command", required=True)
+    pb_index = pb_sub.add_parser("index", help="list recognised files and task coverage")
+    pb_index.add_argument("root", type=Path, help="folder containing the extracted .mat files")
+    pb_index.add_argument("--out", help="optional CSV path for the file index")
+    pb_index.set_defaults(func=_cmd_paderborn_index)
+    pb_inspect = pb_sub.add_parser("inspect", help="show the channels inside one .mat file")
+    pb_inspect.add_argument("file", type=Path)
+    pb_inspect.set_defaults(func=_cmd_paderborn_inspect)
+    pb_feats = pb_sub.add_parser("features", help="segment recordings and extract features")
+    pb_feats.add_argument("root", type=Path, help="folder containing the extracted .mat files")
+    pb_feats.add_argument("--task", choices=sorted(TASKS), default="real3")
+    pb_feats.add_argument("--out", default="outputs/paderborn_features.csv")
+    pb_feats.add_argument("--segment-seconds", type=float, default=1.0)
+    pb_feats.add_argument("--conditions", nargs="+", choices=sorted(OPERATING_CONDITIONS))
+    pb_feats.add_argument(
+        "--max-measurements", type=int, help="use only measurements 1..N per setting (quick runs)"
+    )
+    pb_feats.add_argument(
+        "--envelope-band", type=float, nargs=2, metavar=("LOW_HZ", "HIGH_HZ"),
+        help="demodulation band for envelope analysis (default 0.1-0.4 fs)",
+    )  # fmt: skip
+    pb_feats.add_argument(
+        "--expected-duration", type=float, default=4.0,
+        help="nominal recording length in s for the integrity check (0 disables)",
+    )  # fmt: skip
+    pb_feats.set_defaults(func=_cmd_paderborn_features)
+
+    bench = sub.add_parser("benchmark", help="leakage-safe benchmark of transparent baselines")
+    bench.add_argument("features", nargs="?", help="feature table CSV (e.g. from paderborn)")
+    bench.add_argument("--synthetic", action="store_true", help="dry run on synthetic data")
+    bench.add_argument("--out", default="outputs/benchmark")
+    bench.add_argument("--n-splits", type=int, default=5)
+    bench.add_argument("--n-boot", type=int, default=1000)
+    bench.add_argument("--seed", type=int, default=0)
+    bench.set_defaults(func=_cmd_benchmark)
     return parser
 
 
