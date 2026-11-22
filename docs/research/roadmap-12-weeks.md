@@ -1,7 +1,8 @@
 # PumpGuard-AI research roadmap: 12 weeks from 2026-11-23
 
-Status on 2026-11-22: v0.4.0 released; PR #12 (real3 evidence) open, CI green; amendment 2
-(v0.5 band selection) at Draft 5, not frozen. Decisions are tracked in
+Status on 2026-11-22: v0.4.0 released; PR #12 (real3 evidence) merged into `main` as `0ca01b4`;
+amendment 2 (v0.5 band selection) **frozen** with 9 999 permutations, on branch
+`docs/amendment-2-v0.5` awaiting review and merge. Week 1 is done except that merge. Decisions are tracked in
 [`decision-register.md`](decision-register.md).
 
 Roles:

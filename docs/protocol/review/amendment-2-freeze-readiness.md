@@ -1,25 +1,32 @@
 # Amendment 2 (v0.5): freeze-readiness report
 
-Date: 2026-11-22. Amendment state: **Draft 5 with the owner's decisions, DRAFT until the
-freeze**. Nothing has been implemented or run on real data.
+Date: 2026-11-22. Amendment state: **FROZEN 2026-11-22**. Nothing has been implemented or run
+on real data.
 
 ## Verdict
 
-**The owner approved all five decisions on 2026-11-22. The freeze waits only for the PR #12
-merge (G0 a′).** Every audit correction is applied, the owner's permutation count (9 999) is in
-the Markdown and the config, the two files agree (90 automated checks), and no other design
-value changed since review 2.
+**Frozen on 2026-11-22.** The owner approved all five decisions, PR #12 was merged, and every
+G0 step passed. The owner's permutation count (9 999) is in the Markdown and the config, the two
+files agree, and no other design value changed since review 2. The checker passes 99 of 99
+checks, including the comparison of the recorded freeze hashes with the files.
 
 ## Gate G0 status
 
 | Step | Requirement | Status |
 |---|---|---|
 | (a) | Evidence branch on GitHub; four hashes confirmed against GitHub | Done (PR #12, `d203b5e`; rechecked 2026-11-22) |
-| (a′) | PR #12 merged into `main` on the owner's authorization | Authorized (D6); merge pending |
-| (b) | Content edits complete; `check_amendment2.py` passes | Done (90 / 90 before freezing) |
-| (c) | Owner decisions recorded in section 16 | Approved 2026-11-22; written into section 16 in the freeze commit |
-| (d) | Status FROZEN with date in the Markdown and in `protocol_status` | After (a′) |
-| (e) | SHA-256 of both files recorded in `CHANGELOG.md` and the freeze record | After (d) |
+| (a′) | PR #12 merged into `main` on the owner's authorization | Done: merge commit `0ca01b4` (parents `68848a5`, `d203b5e`); hashes rechecked on `main`; CI on `main` 10 / 10 |
+| (b) | Content edits complete; `check_amendment2.py` passes | Done (92 / 92 with `--no-freeze-record` after the status change) |
+| (c) | Owner decisions recorded in section 16 | Done (sign-off row dated 2026-11-22) |
+| (d) | Status FROZEN with date in the Markdown and in `protocol_status` | Done (`frozen_on` = 2026-11-22) |
+| (e) | SHA-256 of both files recorded in `CHANGELOG.md` and the freeze record | Done; full checker 99 / 99 |
+
+Freeze hashes:
+
+| File | SHA-256 |
+|---|---|
+| `docs/protocol/amendment-v0.5-demodulation-band-selection.md` | `34fc3dd2522d429c404d7ea5150df18f8631853a0535a646164ebedad1730f0a` |
+| `docs/protocol/amendment-v0.5-config.json` | `1d638e670cac6568a84ee1d41ee240f6d2528d1c0cf8ff78c8bad64cc63ef9fd` |
 
 ## Audit items
 
@@ -33,7 +40,7 @@ value changed since review 2.
 | A6 | S2 fixed-model limitation | Fixed |
 | A7 | Sample-ratio wording | Fixed |
 | A8 | Config completeness (status, G2, G4a, G4b, G5, synthetic set-up, V2, secondary) | Fixed |
-| A9 | Automated Markdown/config consistency | Done: checker and 10 tests |
+| A9 | Automated Markdown/config consistency | Done: checker (99 checks when frozen) and 10 tests |
 | A10 | G0 ordering includes PR #12 merge and config status | Fixed |
 
 ## Owner decisions (recorded 2026-11-22)

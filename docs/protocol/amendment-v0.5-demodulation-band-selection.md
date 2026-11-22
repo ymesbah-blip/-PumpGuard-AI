@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Amends | [`docs/benchmark-protocol.md`](../benchmark-protocol.md) (fixed protocol + amendment 1) |
-| Amendment dates | Draft 1: 2026-11-21. Drafts 2–4: 2026-11-22. **Draft 5: 2026-11-22** (pre-freeze audit corrections, section 17) |
-| Status | **DRAFT** (Draft 5). Design approved in review 2; pre-freeze audit corrections applied; PR #12 merge, permutation-count decision and owner sign-off pending. Not executed |
+| Amendment dates | Draft 1: 2026-11-21. Drafts 2–5: 2026-11-22. **Frozen: 2026-11-22** (sections 16 and 17) |
+| Status | **FROZEN** 2026-11-22. Owner sign-off in section 16; SHA-256 of this file and of the config recorded in `CHANGELOG.md` and `amendment-v0.5-freeze-record.json`. Not executed |
 | Machine-readable configuration | [`amendment-v0.5-config.json`](amendment-v0.5-config.json), checked against this text by `scripts/protocol/check_amendment2.py` (section 18) |
 | Based on | v0.4 results in [`docs/results/paderborn-real3/`](../results/paderborn-real3/README.md), identified by content hash (section 2.1) |
 | Scope | Paderborn KAt `real3` task, envelope physics rule only |
@@ -68,7 +68,11 @@ Three facts follow and constrain the design:
   `d203b5e`, and opened [PR #12](https://github.com/ymesbah-blip/-PumpGuard-AI/pull/12)
   against `main`. The four hashes below were then recomputed from the files served by GitHub,
   independently by the reviewer and by this drafting session. All four match. PR #12 has
-  25 changed files, no raw data, and is not merged.
+  25 changed files and no raw data.
+- **Merged 2026-11-22:** on the project owner's authorization, PR #12 was merged into `main` as
+  merge commit `0ca01b43074cd4ac02cb7c82f5c6359b31e27a18` (parents `68848a5` and `d203b5e`, so
+  `d203b5e` is preserved). The four hashes were confirmed again on `main` after the merge, and
+  all CI checks on `main` passed.
 
 **Content hashes.** Because commit hashes change when history is replayed, this amendment
 identifies the evidence by the content of the files. The hashes below were computed on the
@@ -668,7 +672,7 @@ Selection must not damage a case the default already handles.
 |---|---|---|---|
 | Project owner / reviewer, review 1 | | Revision required | 2026-11-22 |
 | Project owner / reviewer, review 2 | | Design approved with minor corrections; freeze pending G0 | 2026-11-22 |
-| Project owner, final sign-off | | Approve / revise / reject | |
+| Project owner, final sign-off | ymesbah-blip | Approved: Draft 5 text and config; decision rules P1, P3, P2, with R1 for a reproducible-band claim; S3 with 9 999 permutations; freeze after the PR #12 merge and gate G0 | 2026-11-22 |
 
 ## 17. Revision history and responses to reviews
 
@@ -737,6 +741,12 @@ PR #12 merge, and chose the permutation count. Changes:
 
 No hypothesis, arm, candidate band, δ, fold, seed, replicate count other than the permutation
 count, threshold or decision rule changed.
+
+**Frozen, 2026-11-22.** Gate G0 complete: (a) the four evidence hashes confirmed against GitHub;
+(a′) PR #12 merged as `0ca01b4`; (b) the checker passes; (c) owner sign-off in section 16;
+(d) status FROZEN in this file and in the config; (e) SHA-256 of both files in `CHANGELOG.md`
+and `amendment-v0.5-freeze-record.json`. From here on this file does not change; a change
+becomes amendment 3 or later.
 
 ## 18. Registered parameters (machine-checked)
 
@@ -807,9 +817,8 @@ against the files.
 
 ---
 
-Draft 5: pre-freeze audit corrections applied; experimental design unchanged since review 2.
-Freeze is pending the rest of gate G0: PR #12 merged, the permutation-count decision, and owner
-sign-off. Implementation and the real-data experiment are not authorised until the amendment is
-frozen.
+Frozen on 2026-11-22 after gate G0. Implementation follows gates G1 to G6 (section 13). The
+real-data steps (G2, G3 and the single run G6) take place only with the project owner's
+explicit approval.
 
-**PROTOCOL STATUS: DRAFTED — NOT YET EXPERIMENTALLY EXECUTED.**
+**PROTOCOL STATUS: FROZEN 2026-11-22 — NOT YET EXPERIMENTALLY EXECUTED.**

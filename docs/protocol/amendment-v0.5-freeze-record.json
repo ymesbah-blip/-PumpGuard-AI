@@ -1,0 +1,59 @@
+{
+  "record": "Freeze record for protocol amendment 2 (v0.5). Kept outside the two hashed files.",
+  "protocol_status": "FROZEN",
+  "frozen_on": "2026-11-22",
+  "amendment": {
+    "path": "docs/protocol/amendment-v0.5-demodulation-band-selection.md",
+    "sha256": "34fc3dd2522d429c404d7ea5150df18f8631853a0535a646164ebedad1730f0a"
+  },
+  "config": {
+    "path": "docs/protocol/amendment-v0.5-config.json",
+    "sha256": "1d638e670cac6568a84ee1d41ee240f6d2528d1c0cf8ff78c8bad64cc63ef9fd"
+  },
+  "permutations": 9999,
+  "owner_decisions": {
+    "date": "2026-11-22",
+    "decided_by": "project owner (ymesbah-blip)",
+    "D1_permutations": 9999,
+    "D2_protocol_text": "Draft 5 approved",
+    "D3_config": "approved",
+    "D4_decision_rules": "P1, P3 and P2 approved; R1 required for a reproducible-band claim",
+    "D5_freeze": "authorized after the PR #12 merge and gate G0",
+    "D6_pr12_merge": "authorized; merged",
+    "D7_pr12_review_comment": "authorized; posted",
+    "D8_branch": "publishing docs/amendment-2-v0.5 authorized"
+  },
+  "gate_G0": {
+    "a_evidence_on_github": "four SHA-256 values confirmed against GitHub at d203b5e and again at main 0ca01b4",
+    "a_prime_pr12_merged": {
+      "merge_commit": "0ca01b43074cd4ac02cb7c82f5c6359b31e27a18",
+      "parents": [
+        "68848a5c7f74112dadefeeac886cf6cbadb36681",
+        "d203b5eed799f6bea33f0ea8c965ac1fc7639e98"
+      ],
+      "merged_at": "2026-11-22T18:34:24Z",
+      "merged_by": "ymesbah-blip",
+      "ci_on_main": "10 of 10 check runs success",
+      "review_comment": "https://github.com/ymesbah-blip/-PumpGuard-AI/pull/12#issuecomment-7083696887"
+    },
+    "b_checker_before_hashing": "scripts/protocol/check_amendment2.py --no-freeze-record: 92 passed, 0 failed",
+    "c_owner_signoff": "amendment section 16",
+    "d_status": "FROZEN in the amendment header and final line, and in config protocol_status and frozen_on",
+    "e_hashes": "this file and CHANGELOG.md"
+  },
+  "base_commit_main": "0ca01b43074cd4ac02cb7c82f5c6359b31e27a18",
+  "evidence_pr": "https://github.com/ymesbah-blip/-PumpGuard-AI/pull/12",
+  "evidence_commit": "d203b5eed799f6bea33f0ea8c965ac1fc7639e98",
+  "evidence_sha256": {
+    "benchmark_results.json": "8a5049e42cc412904240c0768a34e090d65128ebcf288274c3d810bb76f4bf01",
+    "leakage_results.json": "dbd31fce4e6ab4fedf95694a60678805749d10defd7210fe0f6f054ac598a250",
+    "feature_table_provenance.json": "0bd2d22d270f5a4da06456cd5d18b02f96d276b83ece4345426da10aa90d2f20",
+    "paderborn_verification.json": "77ad58199cd0789a78cc28c57b6853bb3d784049977aebac63440d2a17e797aa"
+  },
+  "branch": "docs/amendment-2-v0.5",
+  "draft_commits": [
+    "eeed5823b0e5c44500f23eccb95ea2dc5b818478",
+    "cc83497644b4c968a1fe2127e8b69867e28786a3"
+  ],
+  "experimentally_executed": false
+}

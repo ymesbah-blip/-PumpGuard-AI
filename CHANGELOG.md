@@ -19,14 +19,28 @@ archive verification for the Paderborn loader.
 - Dataset card: Zenodo mirror section (licence label, missing KA08, what the MD5s do and do not
   prove), fact-sheet check and values observed in real files.
 - 10 tests (280 in total).
-- Protocol amendment 2 (v0.5 demodulation-band selection), **Draft 5, not frozen, not
+- Protocol amendment 2 (v0.5 demodulation-band selection), **frozen 2026-11-22, not
   executed**: `docs/protocol/amendment-v0.5-demodulation-band-selection.md` and its config
-  `docs/protocol/amendment-v0.5-config.json`, with the Draft 4 → 5 change report, the PR #12
-  evidence review and the freeze-readiness report in `docs/protocol/review/`.
+  `docs/protocol/amendment-v0.5-config.json`, with the freeze record, the Draft 4 → 5 change
+  report, the PR #12 evidence review and the freeze-readiness report in `docs/protocol/`.
 - `scripts/protocol/check_amendment2.py`: checks the amendment against its config (registered
   parameters, band sets recomputed from the rule, prose values, status fields), against the
-  evidence hashes and the stored G3 value, and recomputes the G3 folds. 8 tests (288 in total).
+  evidence hashes and the stored G3 value, recomputes the G3 folds and, once frozen, compares
+  the recorded freeze hashes with the files. 10 tests (290 in total).
 - `docs/research/`: 12-week roadmap and scientific decision register.
+
+### Protocol freeze
+- **Amendment 2 (v0.5) frozen on 2026-11-22** by the project owner, after gate G0: evidence
+  PR #12 merged into `main` as `0ca01b4` (evidence commit `d203b5e`, four result hashes as in
+  section 2.1 of the amendment), checker passing, owner sign-off recorded.
+- SHA-256 of `docs/protocol/amendment-v0.5-demodulation-band-selection.md`:
+  `34fc3dd2522d429c404d7ea5150df18f8631853a0535a646164ebedad1730f0a`
+- SHA-256 of `docs/protocol/amendment-v0.5-config.json`:
+  `1d638e670cac6568a84ee1d41ee240f6d2528d1c0cf8ff78c8bad64cc63ef9fd`
+- Owner decisions: S3 permutation test with 9 999 permutations, p = (1 + k) / 10 000; decision
+  rules P1, P3 and P2, with R1 for any reproducible-band claim. Machine-readable record:
+  `docs/protocol/amendment-v0.5-freeze-record.json`.
+- Not executed: no v0.5 code exists yet, and no v0.5 computation has run on real data.
 
 ### Results
 - Paderborn `real3` from the Zenodo mirror (15/15 archives MD5-verified, 1 200/1 200 files
