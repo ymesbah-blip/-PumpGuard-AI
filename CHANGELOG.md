@@ -6,7 +6,39 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
-No changes yet.
+First run on measured data (Paderborn `real3`) under the fixed protocol and amendment 1, plus
+archive verification for the Paderborn loader.
+
+### Added
+- `pumpguard.datasets.paderborn_archives` and `pumpguard paderborn verify`: sizes and MD5s of all
+  31 archives in the Zenodo mirror (DOI 10.5281/zenodo.15845309), a check that each bearing has
+  20 measurements × 4 operating conditions (gaps, extras and duplicates are reported), and
+  `paderborn_verification.json`, which `build_feature_table` copies into its report.
+- `scripts/paderborn/fetch_real3.ps1`: Windows download + MD5 + extraction helper for `real3`.
+- `examples/paderborn_real3_figure.py` and figure `docs/images/paderborn_real3.png`.
+- Dataset card: Zenodo mirror section (licence label, missing KA08, what the MD5s do and do not
+  prove), fact-sheet check and values observed in real files.
+- 10 tests (280 in total).
+
+### Results
+- Paderborn `real3` from the Zenodo mirror (15/15 archives MD5-verified, 1 200/1 200 files
+  present, 1 196 used, 4 765 segments). Unseen-bearing balanced accuracy: detection 0.766
+  [0.60, 0.92] (single-feature threshold), diagnosis 0.583 [0.44, 0.73] (envelope rule). No
+  learned model beats every baseline. A random segment split inflates the random forest to 0.994
+  (+0.48 in diagnosis). Write-up, reports and verification record in
+  `docs/results/paderborn-real3/`.
+
+### Fixed
+- Real Paderborn files store `Unit` as an empty MATLAB array; `read_measurement` and
+  `inspect_file` raised `ValueError` or printed `[]`. Empty fields now read as "" ("unspecified
+  in source" in provenance). Found on the first real file; regression test added.
+- Benchmark report header: "a electromechanical" → "an electromechanical".
+
+### Changed
+- Bearing table: KI04 and KI14 note the outer-ring indentation listed in their fact sheets
+  (label unchanged: `inner`).
+- Model cards, README, `docs/leakage-experiment.md` and `ROADMAP.md` updated with the real-data
+  results.
 
 ## [0.4.0] - 2026-11-21
 

@@ -206,6 +206,32 @@ def _cmd_paderborn_index(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_paderborn_verify(args: argparse.Namespace) -> int:
+    from .datasets.paderborn_archives import check_inventory, verify_archives, write_verification
+
+    print(_PADERBORN_NOTICE)
+    archives = None
+    if args.archives is not None:
+        archives = verify_archives(args.archives, task=args.task)
+        print(f"Archives in {args.archives} (sizes and MD5 from Zenodo {args.source} manifest):")
+        for a in archives:
+            print(f"  {a['file']:<10} {a['status']}")
+    inventory = check_inventory(args.root, task=args.task)
+    print(f"Extracted files under {args.root} (expected {inventory['expected_per_bearing']} each):")
+    for code, b in inventory["bearings"].items():
+        gaps = {
+            oc: c for oc, c in b["conditions"].items()
+            if c["missing_indices"] or c["extra_indices"] or c["duplicates"]
+        }  # fmt: skip
+        detail = "" if not gaps else "  problems: " + json.dumps(gaps)
+        status = "ok" if b["complete"] else "INCOMPLETE"
+        print(f"  {code:<6} {b['n_files']:>3} files  {status}{detail}")
+    path = write_verification(args.root, archives, inventory, source=args.source)
+    ok = inventory["complete"] and (archives is None or all(a["status"] == "ok" for a in archives))
+    print(f"{'All checks passed' if ok else 'Problems found'}. Saved {path}")
+    return 0 if ok else 1
+
+
 def _cmd_paderborn_inspect(args: argparse.Namespace) -> int:
     from .datasets.paderborn import inspect_file
 
@@ -402,6 +428,17 @@ def build_parser() -> argparse.ArgumentParser:
     pb_index.add_argument("root", type=Path, help="folder containing the extracted .mat files")
     pb_index.add_argument("--out", help="optional CSV path for the file index")
     pb_index.set_defaults(func=_cmd_paderborn_index)
+    pb_verify = pb_sub.add_parser(
+        "verify", help="check archive MD5s and that every measurement was extracted"
+    )
+    pb_verify.add_argument("root", type=Path, help="folder containing the extracted .mat files")
+    pb_verify.add_argument("--archives", type=Path, help="folder with the downloaded .rar files")
+    pb_verify.add_argument("--task", choices=sorted(TASKS), default="real3")
+    pb_verify.add_argument(
+        "--source", choices=("zenodo", "original"), default="zenodo",
+        help="where the archives came from (the MD5 manifest is the Zenodo mirror's)",
+    )  # fmt: skip
+    pb_verify.set_defaults(func=_cmd_paderborn_verify)
     pb_inspect = pb_sub.add_parser("inspect", help="show the channels inside one .mat file")
     pb_inspect.add_argument("file", type=Path)
     pb_inspect.set_defaults(func=_cmd_paderborn_inspect)

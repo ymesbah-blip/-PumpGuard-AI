@@ -45,7 +45,7 @@ the classic signature of a defect rotating through the load zone.*
   random segment split overstates the group-split score.
 - **Provenance:** every synthetic file gets a JSON sidecar with `"synthetic": true` and the full
   generator configuration.
-- **Engineering hygiene:** 270 tests (analytic checks, not just smoke tests), CI on
+- **Engineering hygiene:** 280 tests (analytic checks, not just smoke tests), CI on
   Linux/Windows/macOS for Python 3.10–3.13, ruff, strict mypy, pre-commit.
 
 ## Quick start
@@ -102,6 +102,7 @@ yourself (CC BY-NC 4.0: non-commercial use, citation required), extract the arch
 
 ```bash
 pumpguard paderborn index   data/paderborn                    # coverage per bearing/condition
+pumpguard paderborn verify  data/paderborn --archives data/paderborn/archives   # MD5s + completeness
 pumpguard paderborn inspect data/paderborn/K001/N15_M07_F10_K001_1.mat
 pumpguard paderborn features data/paderborn --task real3 --out outputs/pu_real3.csv
 pumpguard benchmark outputs/pu_real3.csv --out outputs/bench_real3
@@ -113,6 +114,12 @@ a bootstrap over bearings, lists the bearings and operating conditions that fail
 much a leaky random split would inflate the score. The protocol was fixed before any real
 result: [docs/benchmark-protocol.md](docs/benchmark-protocol.md). Dataset facts and caveats:
 [dataset card](docs/datasets/paderborn-kat.md).
+
+If the university server is unreachable, the same archives are mirrored on
+[Zenodo](https://zenodo.org/records/15845309) (all bearings except KA08). On Windows,
+`scripts/paderborn/fetch_real3.ps1` downloads the 15 `real3` archives from there, checks their
+MD5s and extracts them. The mirror is labelled CC BY 4.0, but the original licence (CC BY-NC
+4.0) still applies.
 
 > This is a **bearing test rig**, not a centrifugal pump. Results on it do not validate pump
 > diagnosis.
@@ -128,8 +135,15 @@ pumpguard leakage   outputs/pu_real3.csv --out outputs/leak_real3
 `--learned` adds logistic regression and a random forest to the benchmark. They see the same
 eight features and the same folds as the baselines, their hyperparameters are fixed in the
 protocol (no tuning), and the report states whether each beats **every** baseline by the
-protocol's rule. On synthetic data neither does: the one-parameter envelope rule is already at
-1.0. Model cards: [docs/model-cards/](docs/model-cards/).
+protocol's rule. Model cards: [docs/model-cards/](docs/model-cards/).
+
+**First real result (Paderborn `real3`, 15 bearings, unseen-bearing balanced accuracy):**
+detection 0.766 [0.60, 0.92] for the best baseline, diagnosis 0.583 [0.44, 0.73] for the envelope
+physics rule. Neither learned model beats every baseline. A random forest that scores 0.994 on a
+random segment split drops to 0.512 on bearings it never saw.
+Details, failure modes and caveats: [docs/results/paderborn-real3/](docs/results/paderborn-real3/README.md).
+
+![Paderborn real3 results](docs/images/paderborn_real3.png)
 
 `pumpguard leakage` runs the same model with a group split and a random segment split over
 several fold seeds and reports the gap.

@@ -1,0 +1,1859 @@
+{
+  "results": {
+    "pumpguard_version": "0.3.0",
+    "protocol": "stratified_group_kfold",
+    "protocol_info": {
+      "n_splits": 5,
+      "groups_per_class": {
+        "healthy": 5,
+        "inner": 5,
+        "outer": 5
+      }
+    },
+    "seed": 0,
+    "n_boot": 1000,
+    "features": [
+      "rms",
+      "kurtosis",
+      "crest_factor",
+      "impulse_factor",
+      "spectral_centroid_hz",
+      "hf_energy_ratio",
+      "env_bpfo_ratio",
+      "env_bpfi_ratio"
+    ],
+    "learned": true,
+    "n_rows_dropped_nonfinite": 0,
+    "data_summary": {
+      "healthy": {
+        "groups": 5,
+        "segments": 1594
+      },
+      "inner": {
+        "groups": 5,
+        "segments": 1582
+      },
+      "outer": {
+        "groups": 5,
+        "segments": 1589
+      }
+    },
+    "tasks": {
+      "detection": [
+        {
+          "baseline": "majority_class",
+          "kind": "baseline",
+          "fitted_rules": [
+            "always predicts 'damaged'",
+            "always predicts 'damaged'",
+            "always predicts 'damaged'",
+            "always predicts 'damaged'",
+            "always predicts 'damaged'"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.6654774396642182,
+            "balanced_accuracy": 0.5,
+            "macro_f1": 0.39957157258064513,
+            "labels": [
+              "healthy",
+              "damaged"
+            ],
+            "confusion_matrix": [
+              [
+                0,
+                1594
+              ],
+              [
+                0,
+                3171
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 1594
+              },
+              "damaged": {
+                "precision": 0.6654774396642182,
+                "recall": 1.0,
+                "f1": 0.7991431451612903,
+                "support": 3171
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.5,
+              0.5
+            ],
+            "macro_f1": [
+              0.28513870418457327,
+              0.46443816218342
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 0.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 0.0,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 0.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.0,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.0,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.5,
+            "N15_M01_F10": 0.5,
+            "N15_M07_F04": 0.5,
+            "N15_M07_F10": 0.5
+          }
+        },
+        {
+          "baseline": "single_feature_threshold",
+          "kind": "baseline",
+          "fitted_rules": [
+            "'damaged' if spectral_centroid_hz < 8100",
+            "'damaged' if spectral_centroid_hz < 8193",
+            "'damaged' if impulse_factor < 15.63",
+            "'damaged' if spectral_centroid_hz < 8093",
+            "'damaged' if spectral_centroid_hz < 8096"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.7798530954879328,
+            "balanced_accuracy": 0.7664239360230951,
+            "macro_f1": 0.7589886044687124,
+            "labels": [
+              "healthy",
+              "damaged"
+            ],
+            "confusion_matrix": [
+              [
+                1157,
+                437
+              ],
+              [
+                612,
+                2559
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.6540418315432448,
+                "recall": 0.7258469259723965,
+                "f1": 0.688076122509664,
+                "support": 1594
+              },
+              "damaged": {
+                "precision": 0.8541388518024032,
+                "recall": 0.8070009460737938,
+                "f1": 0.8299010864277607,
+                "support": 3171
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.6002225415937992,
+              0.9206428342657745
+            ],
+            "macro_f1": [
+              0.5984217068595595,
+              0.889573699228167
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.24375,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.390625,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "damaged",
+              "accuracy": 0.7444794952681388,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "damaged",
+              "accuracy": 0.8698412698412699,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "damaged",
+              "accuracy": 0.677115987460815,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "damaged",
+              "accuracy": 0.565625,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "damaged",
+              "accuracy": 0.725,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "damaged",
+              "accuracy": 0.993485342019544,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "damaged",
+              "accuracy": 0.750788643533123,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "damaged",
+              "accuracy": 0.7515723270440252,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.6712703968201558,
+            "N15_M01_F10": 0.7992424242424243,
+            "N15_M07_F04": 0.8101073293921828,
+            "N15_M07_F10": 0.7861809045226131
+          }
+        },
+        {
+          "baseline": "envelope_rule",
+          "kind": "baseline",
+          "fitted_rules": [
+            "damaged if max(BPFO, BPFI envelope ratio) > 3.26",
+            "damaged if max(BPFO, BPFI envelope ratio) > 2.86",
+            "damaged if max(BPFO, BPFI envelope ratio) > 2.97",
+            "damaged if max(BPFO, BPFI envelope ratio) > 3.52",
+            "damaged if max(BPFO, BPFI envelope ratio) > 2.78"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.7103882476390346,
+            "balanced_accuracy": 0.6913005922952162,
+            "macro_f1": 0.6844976489780251,
+            "labels": [
+              "healthy",
+              "damaged"
+            ],
+            "confusion_matrix": [
+              [
+                1010,
+                584
+              ],
+              [
+                796,
+                2375
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.5592469545957918,
+                "recall": 0.6336260978670013,
+                "f1": 0.5941176470588235,
+                "support": 1594
+              },
+              "damaged": {
+                "precision": 0.8026360256843528,
+                "recall": 0.748975086723431,
+                "f1": 0.7748776508972267,
+                "support": 3171
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.5637580084898949,
+              0.7898308999011695
+            ],
+            "macro_f1": [
+              0.5337847170349581,
+              0.7811183208430341
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 0.75,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 0.2611464968152866,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 0.746875,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.715625,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.6875,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "damaged",
+              "accuracy": 0.9937304075235109,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "damaged",
+              "accuracy": 0.6182965299684543,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "damaged",
+              "accuracy": 0.9968652037617555,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "damaged",
+              "accuracy": 0.2761904761904762,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "damaged",
+              "accuracy": 0.4043887147335423,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "damaged",
+              "accuracy": 0.8,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "damaged",
+              "accuracy": 0.73125,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "damaged",
+              "accuracy": 0.8925081433224755,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "damaged",
+              "accuracy": 0.7767295597484277,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.4685836297141851,
+            "N15_M01_F10": 0.7714646464646464,
+            "N15_M07_F04": 0.7619382425529473,
+            "N15_M07_F10": 0.7635678391959799
+          }
+        },
+        {
+          "baseline": "logistic_regression",
+          "kind": "learned",
+          "fitted_rules": [
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+14.29 for healthy), env_bpfo_ratio (-4.67 for healthy), impulse_factor (+3.79 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+9.10 for healthy), env_bpfo_ratio (-5.13 for healthy), impulse_factor (+4.21 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+8.81 for healthy), env_bpfo_ratio (-6.96 for healthy), impulse_factor (+5.86 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+9.65 for healthy), impulse_factor (+6.21 for healthy), env_bpfo_ratio (-4.37 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+7.53 for healthy), spectral_centroid_hz (+5.73 for healthy), kurtosis (-5.69 for healthy)"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.7485834207764953,
+            "balanced_accuracy": 0.7393418317745472,
+            "macro_f1": 0.7283986201425989,
+            "labels": [
+              "healthy",
+              "damaged"
+            ],
+            "confusion_matrix": [
+              [
+                1134,
+                460
+              ],
+              [
+                738,
+                2433
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.6057692307692307,
+                "recall": 0.7114178168130489,
+                "f1": 0.6543566070398155,
+                "support": 1594
+              },
+              "damaged": {
+                "precision": 0.840995506394746,
+                "recall": 0.7672658467360454,
+                "f1": 0.8024406332453825,
+                "support": 3171
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.5044855561574728,
+              0.9024083566149963
+            ],
+            "macro_f1": [
+              0.49881203096837856,
+              0.8766064656584323
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 0.0031847133757961785,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.93125,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.609375,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "damaged",
+              "accuracy": 0.7728706624605678,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "damaged",
+              "accuracy": 0.5873015873015873,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "damaged",
+              "accuracy": 0.0877742946708464,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "damaged",
+              "accuracy": 0.478125,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "damaged",
+              "accuracy": 0.7547169811320755,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.7529472992393154,
+            "N15_M01_F10": 0.7329545454545454,
+            "N15_M07_F04": 0.7507174424611146,
+            "N15_M07_F10": 0.7207286432160804
+          }
+        },
+        {
+          "baseline": "random_forest",
+          "kind": "learned",
+          "fitted_rules": [
+            "random forest (300 trees, min leaf 3); top impurity importances: hf_energy_ratio (0.26), spectral_centroid_hz (0.25), rms (0.15)",
+            "random forest (300 trees, min leaf 3); top impurity importances: spectral_centroid_hz (0.32), kurtosis (0.15), impulse_factor (0.15)",
+            "random forest (300 trees, min leaf 3); top impurity importances: kurtosis (0.18), impulse_factor (0.17), rms (0.17)",
+            "random forest (300 trees, min leaf 3); top impurity importances: hf_energy_ratio (0.25), spectral_centroid_hz (0.24), rms (0.13)",
+            "random forest (300 trees, min leaf 3); top impurity importances: spectral_centroid_hz (0.26), hf_energy_ratio (0.21), rms (0.15)"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.7370409233997901,
+            "balanced_accuracy": 0.699158029934867,
+            "macro_f1": 0.7013132662184973,
+            "labels": [
+              "healthy",
+              "damaged"
+            ],
+            "confusion_matrix": [
+              [
+                932,
+                662
+              ],
+              [
+                591,
+                2580
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.6119500984898227,
+                "recall": 0.5846925972396487,
+                "f1": 0.5980109079242861,
+                "support": 1594
+              },
+              "damaged": {
+                "precision": 0.7958050586057989,
+                "recall": 0.8136234626300851,
+                "f1": 0.8046156245127085,
+                "support": 3171
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.47502974542790444,
+              0.9046105350321284
+            ],
+            "macro_f1": [
+              0.4651850693411764,
+              0.8544504924198651
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 0.07006369426751592,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.70625,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.1375,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "damaged",
+              "accuracy": 0.7381703470031545,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "damaged",
+              "accuracy": 0.3238095238095238,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "damaged",
+              "accuracy": 0.6614420062695925,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "damaged",
+              "accuracy": 0.66875,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "damaged",
+              "accuracy": 0.99375,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "damaged",
+              "accuracy": 1.0,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "damaged",
+              "accuracy": 0.7515723270440252,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.615728467970428,
+            "N15_M01_F10": 0.7582070707070707,
+            "N15_M07_F04": 0.6904283609787829,
+            "N15_M07_F10": 0.7327324120603016
+          }
+        }
+      ],
+      "diagnosis": [
+        {
+          "baseline": "majority_class",
+          "kind": "baseline",
+          "fitted_rules": [
+            "always predicts 'healthy'",
+            "always predicts 'healthy'",
+            "always predicts 'inner'",
+            "always predicts 'healthy'",
+            "always predicts 'healthy'"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.33179433368310596,
+            "balanced_accuracy": 0.3311017770495236,
+            "macro_f1": 0.23787857111999253,
+            "labels": [
+              "healthy",
+              "outer",
+              "inner"
+            ],
+            "confusion_matrix": [
+              [
+                1274,
+                0,
+                320
+              ],
+              [
+                1274,
+                0,
+                315
+              ],
+              [
+                1275,
+                0,
+                307
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.33324614177347633,
+                "recall": 0.7992471769134254,
+                "f1": 0.4703710540889792,
+                "support": 1594
+              },
+              "outer": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 1589
+              },
+              "inner": {
+                "precision": 0.32590233545647557,
+                "recall": 0.19405815423514539,
+                "f1": 0.24326465927099836,
+                "support": 1582
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.16665883949071175,
+              0.5044700443972363
+            ],
+            "macro_f1": [
+              0.07866237102891399,
+              0.4282558397874419
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.0,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "inner",
+              "accuracy": 0.0,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "inner",
+              "accuracy": 0.0,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "inner",
+              "accuracy": 1.0,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "inner",
+              "accuracy": 0.0,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "inner",
+              "accuracy": 0.0,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.3333333333333333,
+            "N15_M01_F10": 0.33012828709031244,
+            "N15_M07_F04": 0.3273393423576078,
+            "N15_M07_F10": 0.333500417710944
+          }
+        },
+        {
+          "baseline": "envelope_rule",
+          "kind": "baseline",
+          "fitted_rules": [
+            "damaged if max(BPFO, BPFI envelope ratio) > 3.26; outer if BPFO ratio >= BPFI ratio",
+            "damaged if max(BPFO, BPFI envelope ratio) > 2.86; outer if BPFO ratio >= BPFI ratio",
+            "damaged if max(BPFO, BPFI envelope ratio) > 2.97; outer if BPFO ratio >= BPFI ratio",
+            "damaged if max(BPFO, BPFI envelope ratio) > 3.52; outer if BPFO ratio >= BPFI ratio",
+            "damaged if max(BPFO, BPFI envelope ratio) > 2.78; outer if BPFO ratio >= BPFI ratio"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.5832109129066108,
+            "balanced_accuracy": 0.5830544084509935,
+            "macro_f1": 0.5889394308480086,
+            "labels": [
+              "healthy",
+              "outer",
+              "inner"
+            ],
+            "confusion_matrix": [
+              [
+                1010,
+                530,
+                54
+              ],
+              [
+                542,
+                958,
+                89
+              ],
+              [
+                254,
+                517,
+                811
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.5592469545957918,
+                "recall": 0.6336260978670013,
+                "f1": 0.5941176470588235,
+                "support": 1594
+              },
+              "outer": {
+                "precision": 0.47780548628428926,
+                "recall": 0.6028949024543738,
+                "f1": 0.5331107401224262,
+                "support": 1589
+              },
+              "inner": {
+                "precision": 0.850104821802935,
+                "recall": 0.5126422250316056,
+                "f1": 0.639589905362776,
+                "support": 1582
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.44480232396488145,
+              0.7269478097174745
+            ],
+            "macro_f1": [
+              0.4422344662865571,
+              0.7062280262471677
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 0.75,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 0.2611464968152866,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 0.746875,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.715625,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.6875,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "outer",
+              "accuracy": 0.9937304075235109,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "outer",
+              "accuracy": 0.416403785488959,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "outer",
+              "accuracy": 0.9937304075235109,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "outer",
+              "accuracy": 0.26031746031746034,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "outer",
+              "accuracy": 0.3448275862068966,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "inner",
+              "accuracy": 0.525,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "inner",
+              "accuracy": 0.33125,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "inner",
+              "accuracy": 0.20521172638436483,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "inner",
+              "accuracy": 0.9842271293375394,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "inner",
+              "accuracy": 0.5094339622641509,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.4176542696775439,
+            "N15_M01_F10": 0.6693283202418169,
+            "N15_M07_F04": 0.6026008872697285,
+            "N15_M07_F10": 0.643343349978641
+          }
+        },
+        {
+          "baseline": "nearest_centroid",
+          "kind": "baseline",
+          "fitted_rules": [
+            "nearest of 3 class means; most separating: env_bpfi_ratio, spectral_centroid_hz, impulse_factor",
+            "nearest of 3 class means; most separating: spectral_centroid_hz, env_bpfi_ratio, impulse_factor",
+            "nearest of 3 class means; most separating: spectral_centroid_hz, impulse_factor, env_bpfi_ratio",
+            "nearest of 3 class means; most separating: spectral_centroid_hz, crest_factor, impulse_factor",
+            "nearest of 3 class means; most separating: spectral_centroid_hz, env_bpfi_ratio, env_bpfo_ratio"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.5542497376705142,
+            "balanced_accuracy": 0.5541342946899983,
+            "macro_f1": 0.5504992824254477,
+            "labels": [
+              "healthy",
+              "outer",
+              "inner"
+            ],
+            "confusion_matrix": [
+              [
+                1117,
+                230,
+                247
+              ],
+              [
+                271,
+                606,
+                712
+              ],
+              [
+                212,
+                452,
+                918
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.698125,
+                "recall": 0.7007528230865746,
+                "f1": 0.6994364433312461,
+                "support": 1594
+              },
+              "outer": {
+                "precision": 0.4704968944099379,
+                "recall": 0.38137193203272496,
+                "f1": 0.4212721584984359,
+                "support": 1589
+              },
+              "inner": {
+                "precision": 0.48907831646244004,
+                "recall": 0.5802781289506953,
+                "f1": 0.530789245446661,
+                "support": 1582
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.3585279691581869,
+              0.7548002897755993
+            ],
+            "macro_f1": [
+              0.3342596599580552,
+              0.7244201131840526
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.259375,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.25,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "outer",
+              "accuracy": 1.0,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "outer",
+              "accuracy": 0.8996865203761756,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "outer",
+              "accuracy": 0.0,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "inner",
+              "accuracy": 0.75,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "inner",
+              "accuracy": 0.265625,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "inner",
+              "accuracy": 0.4006514657980456,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "inner",
+              "accuracy": 1.0,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "inner",
+              "accuracy": 0.4811320754716981,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.5993333417295332,
+            "N15_M01_F10": 0.5625342049344856,
+            "N15_M07_F04": 0.502136051072449,
+            "N15_M07_F10": 0.55230603797487
+          }
+        },
+        {
+          "baseline": "logistic_regression",
+          "kind": "learned",
+          "fitted_rules": [
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+11.17 for healthy), env_bpfo_ratio (-3.11 for healthy), impulse_factor (+2.59 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+6.55 for healthy), env_bpfo_ratio (-3.45 for healthy), impulse_factor (+3.00 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+6.89 for healthy), env_bpfo_ratio (-4.89 for healthy), impulse_factor (+4.30 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+7.17 for healthy), impulse_factor (+5.33 for healthy), env_bpfo_ratio (-3.19 for healthy)",
+            "logistic regression (C=1); largest z-score weights: hf_energy_ratio (+5.70 for healthy), impulse_factor (+4.37 for healthy), kurtosis (-4.07 for healthy)"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.5716684155299055,
+            "balanced_accuracy": 0.5715459603403736,
+            "macro_f1": 0.5712175681639557,
+            "labels": [
+              "healthy",
+              "outer",
+              "inner"
+            ],
+            "confusion_matrix": [
+              [
+                1070,
+                354,
+                170
+              ],
+              [
+                453,
+                769,
+                367
+              ],
+              [
+                200,
+                497,
+                885
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.6210098665118978,
+                "recall": 0.671267252195734,
+                "f1": 0.6451612903225806,
+                "support": 1594
+              },
+              "outer": {
+                "precision": 0.47469135802469137,
+                "recall": 0.4839521711768408,
+                "f1": 0.4792770333437208,
+                "support": 1589
+              },
+              "inner": {
+                "precision": 0.6223628691983122,
+                "recall": 0.5594184576485461,
+                "f1": 0.5892143808255659,
+                "support": 1582
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.39242486141808886,
+              0.7404779479891765
+            ],
+            "macro_f1": [
+              0.3839828582960287,
+              0.7128693714369093
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 0.0031847133757961785,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.821875,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.51875,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "outer",
+              "accuracy": 0.9968652037617555,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "outer",
+              "accuracy": 0.19242902208201892,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "outer",
+              "accuracy": 0.7210031347962382,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "outer",
+              "accuracy": 0.45714285714285713,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "outer",
+              "accuracy": 0.050156739811912224,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "inner",
+              "accuracy": 0.60625,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "inner",
+              "accuracy": 0.43125,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "inner",
+              "accuracy": 0.24104234527687296,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "inner",
+              "accuracy": 1.0,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "inner",
+              "accuracy": 0.5094339622641509,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.6003408857151253,
+            "N15_M01_F10": 0.6188042731087083,
+            "N15_M07_F04": 0.5076875469881873,
+            "N15_M07_F10": 0.5590778268088357
+          }
+        },
+        {
+          "baseline": "random_forest",
+          "kind": "learned",
+          "fitted_rules": [
+            "random forest (300 trees, min leaf 3); top impurity importances: hf_energy_ratio (0.28), spectral_centroid_hz (0.19), rms (0.16)",
+            "random forest (300 trees, min leaf 3); top impurity importances: spectral_centroid_hz (0.22), hf_energy_ratio (0.16), rms (0.15)",
+            "random forest (300 trees, min leaf 3); top impurity importances: hf_energy_ratio (0.21), spectral_centroid_hz (0.18), rms (0.16)",
+            "random forest (300 trees, min leaf 3); top impurity importances: hf_energy_ratio (0.21), spectral_centroid_hz (0.19), rms (0.17)",
+            "random forest (300 trees, min leaf 3); top impurity importances: spectral_centroid_hz (0.21), hf_energy_ratio (0.20), rms (0.17)"
+          ],
+          "metrics": {
+            "n": 4765,
+            "accuracy": 0.5122770199370409,
+            "balanced_accuracy": 0.5121429235617235,
+            "macro_f1": 0.5130914042986925,
+            "labels": [
+              "healthy",
+              "outer",
+              "inner"
+            ],
+            "confusion_matrix": [
+              [
+                945,
+                360,
+                289
+              ],
+              [
+                449,
+                739,
+                401
+              ],
+              [
+                191,
+                634,
+                757
+              ]
+            ],
+            "per_class": {
+              "healthy": {
+                "precision": 0.5962145110410094,
+                "recall": 0.5928481806775407,
+                "f1": 0.5945265806857502,
+                "support": 1594
+              },
+              "outer": {
+                "precision": 0.42642815926139643,
+                "recall": 0.46507237256135936,
+                "f1": 0.4449127031908489,
+                "support": 1589
+              },
+              "inner": {
+                "precision": 0.5231513476157568,
+                "recall": 0.47850821744627053,
+                "f1": 0.4998349290194784,
+                "support": 1582
+              }
+            }
+          },
+          "ci95": {
+            "balanced_accuracy": [
+              0.3184252744496885,
+              0.7001399025213159
+            ],
+            "macro_f1": [
+              0.3177265322809203,
+              0.6655889721346787
+            ]
+          },
+          "per_group": [
+            {
+              "group": "K001",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K002",
+              "label": "healthy",
+              "accuracy": 0.044585987261146494,
+              "n": 314
+            },
+            {
+              "group": "K003",
+              "label": "healthy",
+              "accuracy": 1.0,
+              "n": 320
+            },
+            {
+              "group": "K004",
+              "label": "healthy",
+              "accuracy": 0.6125,
+              "n": 320
+            },
+            {
+              "group": "K005",
+              "label": "healthy",
+              "accuracy": 0.296875,
+              "n": 320
+            },
+            {
+              "group": "KA04",
+              "label": "outer",
+              "accuracy": 0.987460815047022,
+              "n": 319
+            },
+            {
+              "group": "KA15",
+              "label": "outer",
+              "accuracy": 0.11356466876971609,
+              "n": 317
+            },
+            {
+              "group": "KA16",
+              "label": "outer",
+              "accuracy": 0.7398119122257053,
+              "n": 319
+            },
+            {
+              "group": "KA22",
+              "label": "outer",
+              "accuracy": 0.26666666666666666,
+              "n": 315
+            },
+            {
+              "group": "KA30",
+              "label": "outer",
+              "accuracy": 0.21316614420062696,
+              "n": 319
+            },
+            {
+              "group": "KI04",
+              "label": "inner",
+              "accuracy": 0.66875,
+              "n": 320
+            },
+            {
+              "group": "KI14",
+              "label": "inner",
+              "accuracy": 0.1125,
+              "n": 320
+            },
+            {
+              "group": "KI16",
+              "label": "inner",
+              "accuracy": 0.8501628664495114,
+              "n": 307
+            },
+            {
+              "group": "KI18",
+              "label": "inner",
+              "accuracy": 0.7760252365930599,
+              "n": 317
+            },
+            {
+              "group": "KI21",
+              "label": "inner",
+              "accuracy": 0.0,
+              "n": 318
+            }
+          ],
+          "per_condition": {
+            "N09_M07_F10": 0.573649366296814,
+            "N15_M01_F10": 0.5024527282410776,
+            "N15_M07_F04": 0.4196247494966374,
+            "N15_M07_F10": 0.5524955230225017
+          }
+        }
+      ]
+    },
+    "learned_hyperparameters": {
+      "logistic_regression": {
+        "scaling": "z-score (training fold)",
+        "penalty": "l2",
+        "C": 1.0,
+        "class_weight": "balanced",
+        "max_iter": 5000
+      },
+      "random_forest": {
+        "n_estimators": 300,
+        "min_samples_leaf": 3,
+        "max_features": "sqrt",
+        "class_weight": "balanced",
+        "random_state": 0
+      }
+    },
+    "leakage_check": {
+      "detection/single_feature_threshold": {
+        "group_kfold_balanced_accuracy": 0.7664239360230951,
+        "random_segment_kfold_balanced_accuracy": 0.8300195031272666,
+        "inflation": 0.06359556710417147
+      },
+      "detection/envelope_rule": {
+        "group_kfold_balanced_accuracy": 0.6913005922952162,
+        "random_segment_kfold_balanced_accuracy": 0.7163677888581708,
+        "inflation": 0.02506719656295453
+      },
+      "detection/logistic_regression": {
+        "group_kfold_balanced_accuracy": 0.7393418317745472,
+        "random_segment_kfold_balanced_accuracy": 0.9188192714163449,
+        "inflation": 0.17947743964179774
+      },
+      "detection/random_forest": {
+        "group_kfold_balanced_accuracy": 0.699158029934867,
+        "random_segment_kfold_balanced_accuracy": 0.9938656551471994,
+        "inflation": 0.2947076252123324
+      },
+      "diagnosis/envelope_rule": {
+        "group_kfold_balanced_accuracy": 0.5830544084509935,
+        "random_segment_kfold_balanced_accuracy": 0.6031454703356816,
+        "inflation": 0.02009106188468801
+      },
+      "diagnosis/nearest_centroid": {
+        "group_kfold_balanced_accuracy": 0.5541342946899983,
+        "random_segment_kfold_balanced_accuracy": 0.6196085841983702,
+        "inflation": 0.06547428950837186
+      },
+      "diagnosis/logistic_regression": {
+        "group_kfold_balanced_accuracy": 0.5715459603403736,
+        "random_segment_kfold_balanced_accuracy": 0.7958211874329765,
+        "inflation": 0.22427522709260284
+      },
+      "diagnosis/random_forest": {
+        "group_kfold_balanced_accuracy": 0.5121429235617235,
+        "random_segment_kfold_balanced_accuracy": 0.9941299627776933,
+        "inflation": 0.48198703921596975
+      }
+    },
+    "decision": {
+      "detection": {
+        "logistic_regression": {
+          "beats_all_baselines": false,
+          "versus": {
+            "majority_class": {
+              "baseline_balanced_accuracy": 0.5,
+              "model_ci95_low": 0.5044855561574728,
+              "meaningfully_better": true
+            },
+            "single_feature_threshold": {
+              "baseline_balanced_accuracy": 0.7664239360230951,
+              "model_ci95_low": 0.5044855561574728,
+              "meaningfully_better": false
+            },
+            "envelope_rule": {
+              "baseline_balanced_accuracy": 0.6913005922952162,
+              "model_ci95_low": 0.5044855561574728,
+              "meaningfully_better": false
+            }
+          }
+        },
+        "random_forest": {
+          "beats_all_baselines": false,
+          "versus": {
+            "majority_class": {
+              "baseline_balanced_accuracy": 0.5,
+              "model_ci95_low": 0.47502974542790444,
+              "meaningfully_better": false
+            },
+            "single_feature_threshold": {
+              "baseline_balanced_accuracy": 0.7664239360230951,
+              "model_ci95_low": 0.47502974542790444,
+              "meaningfully_better": false
+            },
+            "envelope_rule": {
+              "baseline_balanced_accuracy": 0.6913005922952162,
+              "model_ci95_low": 0.47502974542790444,
+              "meaningfully_better": false
+            }
+          }
+        }
+      },
+      "diagnosis": {
+        "logistic_regression": {
+          "beats_all_baselines": false,
+          "versus": {
+            "majority_class": {
+              "baseline_balanced_accuracy": 0.3311017770495236,
+              "model_ci95_low": 0.39242486141808886,
+              "meaningfully_better": true
+            },
+            "envelope_rule": {
+              "baseline_balanced_accuracy": 0.5830544084509935,
+              "model_ci95_low": 0.39242486141808886,
+              "meaningfully_better": false
+            },
+            "nearest_centroid": {
+              "baseline_balanced_accuracy": 0.5541342946899983,
+              "model_ci95_low": 0.39242486141808886,
+              "meaningfully_better": false
+            }
+          }
+        },
+        "random_forest": {
+          "beats_all_baselines": false,
+          "versus": {
+            "majority_class": {
+              "baseline_balanced_accuracy": 0.3311017770495236,
+              "model_ci95_low": 0.3184252744496885,
+              "meaningfully_better": false
+            },
+            "envelope_rule": {
+              "baseline_balanced_accuracy": 0.5830544084509935,
+              "model_ci95_low": 0.3184252744496885,
+              "meaningfully_better": false
+            },
+            "nearest_centroid": {
+              "baseline_balanced_accuracy": 0.5541342946899983,
+              "model_ci95_low": 0.3184252744496885,
+              "meaningfully_better": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "dataset": {
+    "dataset_id": "paderborn-kat",
+    "source_url": "https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter",
+    "license": "CC BY-NC 4.0",
+    "citation": "Lessmeier, C.; Kimotho, J. K.; Zimmer, D.; Sextro, W. (2016): Condition Monitoring of Bearing Damage in Electromechanical Drive Systems by Using Motor Current Signals of Electric Motors: A Benchmark Data Set for Data-Driven Classification. European Conference of the Prognostics and Health Management Society, Bilbao (Spain). Data: Christian Lessmeier et al., KAt-DataCenter, Chair of Design and Drive Technology, Paderborn University.",
+    "machine_type": "electromechanical bearing test rig (not a centrifugal pump)",
+    "task": "real3",
+    "task_description": "Healthy vs real outer-race vs real inner-race damage: the 15 bearings of the real-damage experiment in Lessmeier et al. (2016). Group k-fold by bearing.",
+    "channel": "vibration_1",
+    "segment_seconds": 1.0,
+    "envelope_band_hz": "default (0.1 fs, 0.4 fs)",
+    "bearing_geometry": {
+      "designation": "6203",
+      "n_elements": 8,
+      "ball_diameter_mm": 6.75,
+      "pitch_diameter_mm": 28.55,
+      "note": "manufacturer-dependent; defect frequencies vary by about 1-2 %"
+    },
+    "conditions": [
+      "N09_M07_F10",
+      "N15_M01_F10",
+      "N15_M07_F04",
+      "N15_M07_F10"
+    ],
+    "max_measurements": null,
+    "n_files_found": 1200,
+    "n_files_selected": 1200,
+    "n_files_used": 1196,
+    "n_segments": 4765,
+    "missing_bearings": [],
+    "failures": [
+      {
+        "file": "K002/N15_M01_F10_K002_10.mat",
+        "error": "N15_M01_F10_K002_10.mat: 291847 samples = 4.560 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      },
+      {
+        "file": "KI16/N15_M01_F10_KI16_4.mat",
+        "error": "N15_M01_F10_KI16_4.mat: 299038 samples = 4.672 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      },
+      {
+        "file": "KI16/N15_M07_F04_KI16_1.mat",
+        "error": "N15_M07_F04_KI16_1.mat: 289013 samples = 4.516 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      },
+      {
+        "file": "KI16/N15_M07_F04_KI16_16.mat",
+        "error": "N15_M07_F04_KI16_16.mat: 287568 samples = 4.493 s at the documented 64000 Hz, expected about 4 s (truncated file or wrong rate?)"
+      }
+    ],
+    "skipped_files": [],
+    "speed_notes": {},
+    "archive_verification": {
+      "source": "zenodo",
+      "mirror": {
+        "doi": "10.5281/zenodo.15845309",
+        "url": "https://zenodo.org/records/15845309",
+        "uploader": "J. van den Hoogen (Osnabr\u00fcck University)",
+        "license_label_on_mirror": "CC BY 4.0 (cannot relax the original CC BY-NC 4.0)",
+        "missing_from_mirror": [
+          "KA08"
+        ]
+      },
+      "archives_ok": true,
+      "inventory_complete": true,
+      "checked_with_pumpguard": "0.3.0"
+    },
+    "pumpguard_version": "0.3.0"
+  }
+}

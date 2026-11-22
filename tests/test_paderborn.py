@@ -134,6 +134,16 @@ def test_measured_speed_can_be_disabled(tmp_path):
     assert m.provenance["rpm_source"] == "nominal_setting"
 
 
+def test_empty_matlab_unit_field_is_handled(tmp_path):
+    # Real Paderborn files store Unit as an empty MATLAB array ([]) for every channel.
+    path = write_mat(tmp_path / "N15_M07_F10_KA04_1.mat", vibration_unit=np.zeros((0, 0)))
+    m = read_measurement(path, expected_duration_s=D)
+    assert m.provenance["unit"] == "unspecified in source"
+    rows = {r["name"]: r for r in inspect_file(path)}
+    assert rows["vibration_1"]["unit"] == ""
+    assert rows["force"]["unit"] == "N"
+
+
 def test_missing_channel_lists_available_ones(tmp_path):
     path = write_mat(tmp_path / "N15_M07_F10_K001_1.mat", drop_vibration=True)
     with pytest.raises(PaderbornFormatError, match="available: .*force"):

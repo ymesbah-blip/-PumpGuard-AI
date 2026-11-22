@@ -75,6 +75,22 @@ the generator's machine-to-machine spread, the number of machines and the segmen
 real data, run `pumpguard leakage` on the actual feature table and report only the group
 column as performance.
 
+## Real data: Paderborn `real3`
+
+15 bearings (5 per class), 1 196 recordings, 4 765 one-second segments, diagnosis task,
+10 fold seeds ([report](results/paderborn-real3/leakage_report.md)):
+
+| Model | Group k-fold | Random k-fold | Inflation [min, max] |
+|---|---|---|---|
+| `nearest_centroid` | 0.575 | 0.620 | +0.044 [+0.019, +0.065] |
+| `logistic_regression` | 0.579 | 0.796 | +0.218 [+0.186, +0.266] |
+| `random_forest` | 0.525 | 0.994 | +0.469 [+0.383, +0.504] |
+
+The synthetic mechanism appears in measured data. A random forest scores 0.99 when segments
+of every bearing sit on both sides, and 0.53 when whole bearings are held out. Its top features
+(`hf_energy_ratio`, `spectral_centroid_hz`, `rms`) describe each bearing's broadband level, not
+its defect frequencies. Report only the group column.
+
 ## Checks for any study
 
 1. Is every split by the unit that carries shared information (machine, bearing, recording day)?

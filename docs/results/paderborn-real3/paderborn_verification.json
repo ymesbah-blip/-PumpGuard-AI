@@ -1,0 +1,625 @@
+{
+  "pumpguard_version": "0.3.0",
+  "source": "zenodo",
+  "license_of_original_data": "CC BY-NC 4.0",
+  "inventory_complete": true,
+  "inventory": {
+    "expected_per_bearing": 80,
+    "bearings": {
+      "K001": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "K002": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "K003": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "K004": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "K005": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KA04": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KA15": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KA16": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KA22": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KA30": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KI04": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KI14": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KI16": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KI18": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      },
+      "KI21": {
+        "complete": true,
+        "n_files": 80,
+        "conditions": {
+          "N09_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M01_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F04": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          },
+          "N15_M07_F10": {
+            "n_files": 20,
+            "missing_indices": [],
+            "extra_indices": [],
+            "duplicates": []
+          }
+        }
+      }
+    },
+    "complete": true,
+    "n_unrecognised_mat_files": 0
+  },
+  "mirror": {
+    "doi": "10.5281/zenodo.15845309",
+    "url": "https://zenodo.org/records/15845309",
+    "uploader": "J. van den Hoogen (Osnabrück University)",
+    "license_label_on_mirror": "CC BY 4.0 (cannot relax the original CC BY-NC 4.0)",
+    "missing_from_mirror": [
+      "KA08"
+    ]
+  },
+  "archives": [
+    {
+      "bearing": "K001",
+      "file": "K001.rar",
+      "expected_bytes": 173881721,
+      "bytes": 173881721,
+      "expected_md5": "af6dc58283d356cd438e7738a2d525b8",
+      "md5": "af6dc58283d356cd438e7738a2d525b8",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "K002",
+      "file": "K002.rar",
+      "expected_bytes": 161981588,
+      "bytes": 161981588,
+      "expected_md5": "88631bc0081a6470846d18189d46381d",
+      "md5": "88631bc0081a6470846d18189d46381d",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "K003",
+      "file": "K003.rar",
+      "expected_bytes": 173194389,
+      "bytes": 173194389,
+      "expected_md5": "08b61792e1058dc47dd21071666bca2c",
+      "md5": "08b61792e1058dc47dd21071666bca2c",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "K004",
+      "file": "K004.rar",
+      "expected_bytes": 163337851,
+      "bytes": 163337851,
+      "expected_md5": "5b9fde1c6d754806539f9a890ee6bbdd",
+      "md5": "5b9fde1c6d754806539f9a890ee6bbdd",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "K005",
+      "file": "K005.rar",
+      "expected_bytes": 167366765,
+      "bytes": 167366765,
+      "expected_md5": "28d91412ad14583fbdfda958b64a8267",
+      "md5": "28d91412ad14583fbdfda958b64a8267",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KA04",
+      "file": "KA04.rar",
+      "expected_bytes": 180920703,
+      "bytes": 180920703,
+      "expected_md5": "f87503ed69a624ba6e1d9e573e6c09fb",
+      "md5": "f87503ed69a624ba6e1d9e573e6c09fb",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KA15",
+      "file": "KA15.rar",
+      "expected_bytes": 164268273,
+      "bytes": 164268273,
+      "expected_md5": "db518f97ba5bcaedb09c648a317431e0",
+      "md5": "db518f97ba5bcaedb09c648a317431e0",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KA16",
+      "file": "KA16.rar",
+      "expected_bytes": 167165704,
+      "bytes": 167165704,
+      "expected_md5": "ef848f5621f9c10523c313131d1a4c21",
+      "md5": "ef848f5621f9c10523c313131d1a4c21",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KA22",
+      "file": "KA22.rar",
+      "expected_bytes": 159054470,
+      "bytes": 159054470,
+      "expected_md5": "7a16a5bc88d5fe1d83d169f88f0709e8",
+      "md5": "7a16a5bc88d5fe1d83d169f88f0709e8",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KA30",
+      "file": "KA30.rar",
+      "expected_bytes": 163625195,
+      "bytes": 163625195,
+      "expected_md5": "715c0cf7862a7ba83e7c6a6fb5c91a61",
+      "md5": "715c0cf7862a7ba83e7c6a6fb5c91a61",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KI04",
+      "file": "KI04.rar",
+      "expected_bytes": 172644279,
+      "bytes": 172644279,
+      "expected_md5": "a5a634fcdcb33a8501e7411d30441c6d",
+      "md5": "a5a634fcdcb33a8501e7411d30441c6d",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KI14",
+      "file": "KI14.rar",
+      "expected_bytes": 163581312,
+      "bytes": 163581312,
+      "expected_md5": "13603834975435ca10eb08de6d1840dc",
+      "md5": "13603834975435ca10eb08de6d1840dc",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KI16",
+      "file": "KI16.rar",
+      "expected_bytes": 166348305,
+      "bytes": 166348305,
+      "expected_md5": "db14eae04a213afd0d1ca99d3d850342",
+      "md5": "db14eae04a213afd0d1ca99d3d850342",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KI18",
+      "file": "KI18.rar",
+      "expected_bytes": 161226797,
+      "bytes": 161226797,
+      "expected_md5": "db5da511e9240dbc56ec1e850fd91699",
+      "md5": "db5da511e9240dbc56ec1e850fd91699",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    },
+    {
+      "bearing": "KI21",
+      "file": "KI21.rar",
+      "expected_bytes": 164882839,
+      "bytes": 164882839,
+      "expected_md5": "911ce3e37a86d258818e3e93274752a2",
+      "md5": "911ce3e37a86d258818e3e93274752a2",
+      "status": "ok",
+      "checked_on": "user's computer (Windows Get-FileHash and Linux hashlib, independently)"
+    }
+  ],
+  "archives_ok": true
+}

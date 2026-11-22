@@ -1,7 +1,8 @@
 # Model card: `logistic_regression`
 
-> **Status:** evaluated on synthetic data only (pipeline dry run). No result on real
-> measurements exists yet. Nothing here is validated for operational or safety decisions.
+> **Status:** evaluated on synthetic data and on the real Paderborn `real3` bearings (test rig,
+> not a pump). It does not beat the transparent baselines. Nothing here is validated for
+> operational or safety decisions.
 
 ## Overview
 - **Task:** detection (healthy vs damaged) and diagnosis (healthy / outer race / inner race) of
@@ -20,7 +21,7 @@
 ## Training data
 - **Datasets:** synthetic dry run (`pumpguard benchmark --synthetic --learned`). Planned: Paderborn
   KAt `real3` and `artificial_to_real` ([dataset card](../datasets/paderborn-kat.md)).
-- **Synthetic, real, or both?** Synthetic only so far.
+- **Synthetic, real, or both?** Both: synthetic dry run and Paderborn `real3` (Zenodo mirror, MD5-verified).
 - **Preprocessing:** rows with non-finite features are dropped and counted; z-scoring inside
   each training fold.
 
@@ -37,6 +38,13 @@
 
 - **Leakage check (synthetic):** a random segment split raises balanced accuracy by +0.05
   (detection) and +0.07 (diagnosis).
+- **Real data, Paderborn `real3`** (15 bearings, 4 765 segments,
+  [full results](../results/paderborn-real3/README.md)):
+
+  | Task | Balanced accuracy [95 % CI] | Best baseline | Beats all baselines? | Random-split score |
+  |---|---|---|---|---|
+  | detection | 0.739 [0.50, 0.90] | `single_feature_threshold` 0.766 | no | 0.919 (+0.18) |
+  | diagnosis | 0.572 [0.39, 0.74] | `envelope_rule` 0.583 | no | 0.796 (+0.22) |
 - **Results under shift:** not yet measured. See the
   [leakage experiment](../leakage-experiment.md) for behaviour as fault severity decreases.
 
@@ -47,6 +55,13 @@
   expected for impulsive faults.
 - Correlated features (crest, impulse and kurtosis) share weight, so a single coefficient's size
   is not a measure of that feature's importance.
+
+## Real-data flag
+
+- **Real data flag (amendment 1):** on `real3` the largest weight goes to `hf_energy_ratio`
+  (healthy direction), ahead of `env_bpfo_ratio` and `impulse_factor`. A broadband level feature
+  that differs between individual bearings carries the model, which explains its +0.22 gain under
+  a random split.
 
 ## Limitations and intended use
 - **Not validated for operational or safety decisions.**
