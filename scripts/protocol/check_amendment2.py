@@ -16,12 +16,15 @@ Checks:
 * the G3 expected value equals the stored v0.4 value, and the G3 fold list equals the folds
   recomputed with ``pumpguard.evaluation.stratified_group_kfold`` (skipped if the package is
   not importable);
-* wording removed after the pre-freeze audit does not come back.
+* wording removed after the pre-freeze audit does not come back;
+* once the amendment is FROZEN: the SHA-256 values in the freeze record and in ``CHANGELOG.md``
+  equal the hashes of the two files, so any later edit to a frozen file is reported.
 
 Usage::
 
     python scripts/protocol/check_amendment2.py            # human-readable, exit 1 on failure
     python scripts/protocol/check_amendment2.py --json     # machine-readable report
+    python scripts/protocol/check_amendment2.py --no-freeze-record   # freeze step 3 only
 """
 
 from __future__ import annotations
@@ -39,6 +42,8 @@ REPO = Path(__file__).resolve().parents[2]
 DEFAULT_MD = REPO / "docs/protocol/amendment-v0.5-demodulation-band-selection.md"
 DEFAULT_CONFIG = REPO / "docs/protocol/amendment-v0.5-config.json"
 DEFAULT_EVIDENCE = REPO / "docs/results/paderborn-real3"
+DEFAULT_FREEZE = REPO / "docs/protocol/amendment-v0.5-freeze-record.json"
+DEFAULT_CHANGELOG = REPO / "CHANGELOG.md"
 
 TABLE_START = "<!-- registered-parameters:start -->"
 TABLE_END = "<!-- registered-parameters:end -->"
@@ -263,6 +268,14 @@ def check_status(report: Report, md: str, cfg: dict[str, Any]) -> None:
         f"registered={registered!r}",
     )
     if status == "FROZEN":
+        frozen_on = str(cfg.get("frozen_on", ""))
+        report.add(
+            "status:frozen-date",
+            bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}", frozen_on))
+            and frozen_on in header
+            and frozen_on in last,
+            f"frozen_on={frozen_on!r} must appear in the header and the final line",
+        )
         report.add(
             "status:frozen-has-decision",
             decision.get("status") not in {None, "PENDING"},
@@ -322,6 +335,69 @@ def check_evidence(report: Report, md: str, cfg: dict[str, Any], evidence: Path 
     report.add("evidence:G3-folds", recomputed == registered, json.dumps(recomputed))
 
 
+def check_freeze(
+    report: Report,
+    markdown_path: Path,
+    config_path: Path,
+    cfg: dict[str, Any],
+    freeze_record: Path | None,
+    changelog: Path,
+) -> None:
+    if freeze_record is None:
+        report.skipped.append("freeze record (--no-freeze-record)")
+        return
+    if cfg.get("protocol_status") != "FROZEN":
+        report.add(
+            "freeze:no-record-while-draft",
+            not freeze_record.is_file(),
+            f"{freeze_record.name} must not exist before the freeze",
+        )
+        return
+    if not freeze_record.is_file():
+        report.add("freeze:record-present", False, f"missing {freeze_record}")
+        return
+    record = json.loads(freeze_record.read_text(encoding="utf-8"))
+    md_hash, cfg_hash = sha256(markdown_path), sha256(config_path)
+    report.add(
+        "freeze:amendment-sha256",
+        record.get("amendment", {}).get("sha256") == md_hash,
+        f"file {md_hash[:12]}",
+    )
+    report.add(
+        "freeze:config-sha256",
+        record.get("config", {}).get("sha256") == cfg_hash,
+        f"file {cfg_hash[:12]}",
+    )
+    report.add(
+        "freeze:paths",
+        record.get("amendment", {}).get("path") == cfg["amendment"]
+        and record.get("config", {}).get("path") == f"docs/protocol/{config_path.name}",
+        "record names the amendment and the config",
+    )
+    report.add(
+        "freeze:status-and-date",
+        record.get("protocol_status") == "FROZEN" and record.get("frozen_on") == cfg["frozen_on"],
+        f"record {record.get('protocol_status')!r} {record.get('frozen_on')!r}",
+    )
+    report.add(
+        "freeze:permutations",
+        record.get("permutations") == cfg["statistics"]["S3_permutation"]["permutations"],
+        f"record {record.get('permutations')!r}",
+    )
+    report.add(
+        "freeze:evidence",
+        record.get("evidence_sha256") == cfg["evidence_sha256"]
+        and record.get("evidence_commit") == cfg["evidence_commit"],
+        "record repeats the evidence hashes and commit",
+    )
+    text = changelog.read_text(encoding="utf-8") if changelog.is_file() else ""
+    report.add(
+        "freeze:changelog",
+        md_hash in text and cfg_hash in text,
+        f"{changelog.name} lists both hashes",
+    )
+
+
 def check_stale(report: Report, md: str) -> None:
     # The revision history (section 17) quotes the old wording on purpose.
     body = md.replace(section(md, "17."), "")
@@ -346,6 +422,8 @@ def run_checks(
     markdown_path: Path = DEFAULT_MD,
     config_path: Path = DEFAULT_CONFIG,
     evidence_dir: Path | None = DEFAULT_EVIDENCE,
+    freeze_record: Path | None = DEFAULT_FREEZE,
+    changelog: Path = DEFAULT_CHANGELOG,
 ) -> Report:
     md = markdown_path.read_text(encoding="utf-8")
     cfg = json.loads(config_path.read_text(encoding="utf-8"))
@@ -357,6 +435,7 @@ def run_checks(
     check_evidence(report, md, cfg, evidence_dir)
     check_stale(report, md)
     check_links(report, md, cfg, config_path)
+    check_freeze(report, markdown_path, config_path, cfg, freeze_record, changelog)
     return report
 
 
@@ -368,10 +447,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--no-evidence-files", action="store_true", help="skip hashing the evidence files"
     )
+    parser.add_argument("--freeze-record", type=Path, default=DEFAULT_FREEZE)
+    parser.add_argument("--changelog", type=Path, default=DEFAULT_CHANGELOG)
+    parser.add_argument(
+        "--no-freeze-record",
+        action="store_true",
+        help="skip the freeze-record checks (freeze step 3, before the hashes exist)",
+    )
     parser.add_argument("--json", action="store_true", help="print a JSON report")
     args = parser.parse_args(argv)
     evidence = None if args.no_evidence_files else args.evidence
-    report = run_checks(args.markdown, args.config, evidence)
+    freeze = None if args.no_freeze_record else args.freeze_record
+    report = run_checks(args.markdown, args.config, evidence, freeze, args.changelog)
     if args.json:
         print(json.dumps(report.as_dict(), indent=2, ensure_ascii=False))
     else:

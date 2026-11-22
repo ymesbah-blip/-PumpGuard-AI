@@ -61,15 +61,15 @@ stops the plan at that point. No threshold, band or rule is tuned after seeing h
 - **Inputs:** week 2 module.
 - **Deliverables:** tests L3, L5, L8–L11, L13 and a determinism test.
 - **Acceptance:** all L1–L13 tests pass; two runs on synthetic data give identical output.
-- **Risks:** permutation runtime with 9 999. Mitigation: vectorise threshold fitting; measured
-  0.69 ms per fit.
+- **Risks:** permutation runtime with 9 999 (owner decision). Mitigation: vectorise threshold
+  fitting; measured 0.69 ms per fit.
 - **Dependencies:** week 2.
 
 ## Week 4 (Dec 14–20): gate G1 review and synthetic positive controls
 
 - **Objective:** implementation merged; G4a and G4b decided on synthetic data.
 - **Tasks:** PR for weeks 2–3 (owner merges = G1); run G4a (3 kHz resonance) and G4b (8 kHz) with
-  data seed 2026; write `docs/results/v0.5-synthetic/`.
+  data seed 2026; write `docs/results/paderborn-real3-v0.5/synthetic/`.
 - **Role:** Engineer (run, report), Owner (merge G1).
 - **Inputs:** merged module; frozen synthetic set-up.
 - **Deliverables:** G4a and G4b results with selected band per fold, ΔBA and S2 interval.
@@ -96,11 +96,13 @@ stops the plan at that point. No threshold, band or rule is tuned after seeing h
 ## Week 6 (Dec 28–Jan 3): buffer, then the confirmatory run if approved
 
 - **Objective:** the single real-data run (G6), only with the owner's explicit approval.
-- **Tasks:** request approval with the exact command, commit, config hash and expected runtime;
+- **Tasks:** request approval with the exact command, commit, config hash and expected runtime
+  (about 83 min for the 9 999 permutations, plus about 6 min for the feature cube);
   run once; write the report whatever the outcome; commit results next to v0.4's.
 - **Role:** Owner (approval), Engineer (run).
 - **Inputs:** G1–G5 passed; G2/G3 passed.
-- **Deliverables:** `docs/results/v0.5-real3/` (JSON, Markdown report, feature-cube hash, run log).
+- **Deliverables:** `docs/results/paderborn-real3-v0.5/` (JSON, Markdown report, figure, feature-cube
+  hash, run log), as section 14 of the amendment specifies.
 - **Acceptance:** one run; outputs list every item of section 12; conclusion uses the exact
   wording of section 10.3.
 - **Risks:** a crash mid-run. Mitigation: the run log records it; a rerun is reported as a rerun.

@@ -69,6 +69,18 @@ Markdown fixes, and three keys were renamed for clarity.
 | Decision | added `P2_alpha` (0.05) |
 | Secondary | added `secondary` (δ = 0 sensitivity, RQ2, RQ3, RQ4, RQ7, diagnosis BA, optimism; descriptive only) |
 
+## Owner decisions applied after this report (2026-11-22, before freezing)
+
+| Change | Where |
+|---|---|
+| S3 permutation count 1 000 → **9 999** (owner decision D1); p = (1 + k) / 10 000; Monte Carlo SE ≈ 0.002; the report states seed and completed permutations | Sections 10.2, 12, 15, 18; config `statistics.S3_permutation` |
+| `permutations_owner_decision` set to DECIDED (2026-11-22) | Config |
+| G2 tolerances and short-file threshold registered (values from the existing text) | Section 18; config `gates.G2` |
+| Disclosure extended to Drafts 4 and 5; real config path in the CLI example; G0 (a′) wording; freeze-record file and checker steps in section 16 | Opening paragraph, sections 13, 14, 16 |
+
+The test `test_config_matches_the_approved_design` pins every design value listed in the
+approved protocol, so a later unapproved change fails CI.
+
 ## Verification run on Draft 5
 
 - `python scripts/protocol/check_amendment2.py`: 86 checks passed, 0 failed.

@@ -269,19 +269,23 @@
     "S3_permutation": {
       "exchange": "3-class bearing labels, class counts preserved",
       "refolds": true,
-      "permutations": 1000,
+      "permutations": 9999,
       "seed": 12345,
       "p_formula": "(1 + k) / (1 + N), k = #{null BA >= observed BA}, N = permutations",
       "monte_carlo_report": [
+        "seed",
+        "N completed (must equal permutations)",
         "k",
-        "N",
+        "p",
         "Clopper-Pearson 95% interval for k / N"
       ],
       "sequential_extension": false,
       "permutations_owner_decision": {
-        "status": "PENDING",
+        "status": "DECIDED",
+        "decided_by": "project owner",
+        "decision_date": "2026-11-22",
         "options": [1000, 9999],
-        "registered": 1000
+        "registered": 9999
       }
     }
   },
@@ -309,6 +313,9 @@
       "segments_N09": 1196,
       "sample_ratio_vib_to_4khz": 16,
       "ratio_tolerance": 0.001,
+      "nominal_seconds": 4.0,
+      "vibration_length_tolerance": 0.1,
+      "short_file_threshold_samples": 256000,
       "short_files_N09": [
         "N09_M07_F10_K002_6",
         "N09_M07_F10_KA15_8",

@@ -13,9 +13,9 @@
 default (6.4–25.6 kHz) has been applied to Paderborn data. No v0.5 code exists. The authors of
 this draft know the v0.4 results, including the per-condition scores and the per-bearing
 envelope medians at the default band; those results motivate the study and are listed in
-section 2. Nothing else about candidate bands has been observed. Between Draft 1 and Draft 3,
+section 2. Nothing else about candidate bands has been observed. Between Draft 1 and Draft 5,
 only primary sources (the 2016 publication, the KAt rig page), v0.4 file metadata (sample
-counts) and the remote repository state were consulted.
+counts), the stored v0.4 result files and the remote repository state were consulted.
 
 ---
 
@@ -384,11 +384,13 @@ is computed exactly as the existing rule defines it.
 - Permute the 3-class labels among the 15 bearings, preserving class counts. Derive detection
   labels and regenerate the outer folds with seed 0.
 - Rerun the complete nested V1 procedure and record the pooled outer BA.
-- Do this for 1 000 permutations (decision U6), seed 12345.
-- p = (1 + k) / (1 + N), with k = #{null BA ≥ observed BA} and N = 1 000, so p = (1 + k) / 1 001.
-- **Monte Carlo uncertainty is reported with p:** k, N, and the 95 % Clopper–Pearson interval for
-  the exceedance probability k / N. Near the threshold the standard error is about
-  √(0.05 · 0.95 / N) ≈ 0.007. The decision uses the point value p ≤ 0.05 as registered. No
+- Do this for 9 999 permutations (owner decision D-perm, 2026-11-22), seed 12345.
+- p = (1 + k) / (1 + N), with k = #{null BA ≥ observed BA} and N = 9 999, so p = (1 + k) / 10 000.
+  The smallest attainable p is 0.0001.
+- **Monte Carlo uncertainty is reported with p:** the permutation seed, the number of completed
+  permutations (must equal N = 9 999), k, and the 95 % Clopper–Pearson interval for the
+  exceedance probability k / N. Near the threshold the standard error is about
+  √(0.05 · 0.95 / N) ≈ 0.002. The decision uses the point value p ≤ 0.05 as registered. No
   permutations are added after the result is seen. If the interval contains 0.05, the report
   says that P2 is close to the threshold.
 
@@ -492,7 +494,7 @@ results file, not re-tuned.
   - outer seed 0;
   - S1 bootstrap seed 0, 1 000 replicates;
   - S2 bootstrap seed 0, 10 000 replicates;
-  - S3 permutation seed 12345, 1 000 permutations;
+  - S3 permutation seed 12345, 9 999 permutations;
   - the tie-break order;
   - the SHA-256 values of section 2.1.
 - **Feature cube:** all 45 bands × 1 196 segments (and all conditions for VG), saved with
@@ -513,7 +515,7 @@ results file, not re-tuned.
 
 | Gate | Requirement |
 |---|---|
-| G0 | In this order: (a) the evidence branch `feat/paderborn-real3-evidence` is on GitHub and the four hashes of section 2.1 are confirmed against the files served by GitHub; (a′) PR #12 is merged into `main` by the project owner; (b) all content edits are complete and `scripts/protocol/check_amendment2.py` passes; (c) the project owner's decisions (permutation count, approval) are recorded in section 16; (d) the status is changed to FROZEN with the date, in this file and in the config's `protocol_status`; (e) **only then** SHA-256 of this file and of the config JSON are computed and recorded in `CHANGELOG.md`. |
+| G0 | In this order: (a) the evidence branch `feat/paderborn-real3-evidence` is on GitHub and the four hashes of section 2.1 are confirmed against the files served by GitHub; (a′) PR #12 is merged into `main` on the project owner's authorization; (b) all content edits are complete and `scripts/protocol/check_amendment2.py` passes; (c) the project owner's decisions (permutation count, approval) are recorded in section 16; (d) the status is changed to FROZEN with the date, in this file and in the config's `protocol_status`; (e) **only then** SHA-256 of this file and of the config JSON are computed and recorded in `CHANGELOG.md` and `amendment-v0.5-freeze-record.json`. |
 | G1 | Implementation and tests merged: L1–L13, band sets, tie-break, δ rule, S2 pairing, determinism |
 | G2 | Measured on the files, not assumed: 300 files and 1 196 segments at 900 rpm. Every used file has a vibration ÷ 4 kHz-channel sample ratio of 16 (± 0.1 %) and a vibration length within ±10 % of 4 s. At 900 rpm, the 4 known short files (255 997–255 999 samples, 3 segments) are the only ones below 256 000. Any deviation stops the run and requires an amendment. |
 | G3 | R0 recomputed equals the stored v0.4 value **0.4685836297141851** within an absolute tolerance of 1e-9, and the outer fold assignment equals v0.4's: fold 0 = {K003, KA04, KI21}, fold 1 = {K005, KA16, KI14}, fold 2 = {K004, KA22, KI16}, fold 3 = {K001, KA30, KI04}, fold 4 = {K002, KA15, KI18} |
@@ -572,7 +574,7 @@ Selection must not damage a case the default already handles.
 - `permutation_test(...)`;
 - a report writer.
 
-**CLI:** `pumpguard bandselect FEATURES_DIR --config amendment2.json --out DIR`.
+**CLI:** `pumpguard bandselect FEATURES_DIR --config docs/protocol/amendment-v0.5-config.json --out DIR`.
 
 **Tests (`tests/test_bandselect.py`):**
 
@@ -635,10 +637,10 @@ Selection must not damage a case the default already handles.
 | U3, 2 kHz minimum bandwidth | Accepted, worded as an approximate rationale (section 8.2) |
 | U4, switching frequency | Resolved: 16 kHz (publication p. 7). 9 bands excluded; D0 kept as control and fallback; full-grid search is the pre-specified sensitivity analysis |
 | U5, accelerometer datasheet | **Open.** Does not block freezing. Consequence: no selected band above ~10 kHz is attributed to a specific mechanical resonance, and 27 kHz is not treated as a calibrated sensor range |
-| U6, 1 000 permutations | Accepted; S3 reframed as an empirical null under bearing-label exchangeability (section 10.2, review 2) |
+| U6, permutation count | Review 2 accepted 1 000; replaced by owner decision D-perm (9 999). S3 reframed as an empirical null under bearing-label exchangeability (section 10.2, review 2) |
 | U7, harmonic proximity | Accepted as a separate amendment 3, after v0.5, with longer records and narrower peak windows |
 | U8, acquisition anti-alias filter | **Open** (pre-freeze audit). Does not block freezing. Consequence: the aliasing argument in section 5 is conditional |
-| D-perm, permutation count | **Owner decision required before freezing.** Registered value: 1 000 (review 2). Alternative: 9 999 (p denominator 10 000, Monte Carlo SE ≈ 0.002 near 0.05, about 83 min instead of about 8 min). The chosen value must appear identically in sections 10.2, 12 and 18 and in the config |
+| D-perm, permutation count | **Decided by the project owner on 2026-11-22: 9 999 permutations.** p denominator 10 000; Monte Carlo SE ≈ 0.002 near p = 0.05; estimated compute ≈ 83 min (≈ 8 min for the 1 000 registered in review 2). Sections 10.2, 12 and 18 and the config state the same value |
 
 ## 16. Change control and sign-off
 
@@ -647,12 +649,17 @@ Selection must not damage a case the default already handles.
   1. Complete all content edits.
   2. Record the project owner's decision in the sign-off table below.
   3. Change the status in the header and at the end of this file, and the `protocol_status` field
-     of the config JSON, to FROZEN with the date. Run `scripts/protocol/check_amendment2.py`.
+     of the config JSON, to FROZEN with the date. Run
+     `scripts/protocol/check_amendment2.py --no-freeze-record` (the hashes do not exist yet).
   4. Compute SHA-256 of this file **as it now stands** and of the config JSON.
-  5. Record both hashes in `CHANGELOG.md`.
+  5. Record both hashes in `CHANGELOG.md` and in `amendment-v0.5-freeze-record.json`, next to
+     this file.
+  6. Run `scripts/protocol/check_amendment2.py` without the flag. Every check, including the
+     comparison of the recorded hashes with the files, must pass.
 - The hash lives outside this file. Writing it into the file would change the file and break
   the hash.
 - Any byte changed after step 4 voids the freeze and requires a new hash and a recorded reason.
+  The checker detects such a change, because the recorded hashes no longer match the files.
 - After the v0.5 run starts, this file does not change. Any later change becomes a new
   amendment, states its reason, and leaves the v0.5 results reported next to the new ones.
 - Results are published whatever the outcome.
@@ -716,14 +723,31 @@ hypothesis, arm, candidate band, threshold, seed, replicate count or decision ru
 | A9 | Markdown and config can drift apart | `scripts/protocol/check_amendment2.py` recomputes the band sets from the rule and compares section 18, the prose values, the evidence hashes and the status fields with the config; run in the test suite |
 | A10 | G0 did not require the PR #12 merge or the config status | G0 (a′) and (d); section 16 step 3 |
 
+**Draft 5 with the owner's decisions, 2026-11-22 (before freezing).** The project owner approved
+the Draft 5 text, the config, the decision rules P1, P3, P2 and R1, and the freeze after the
+PR #12 merge, and chose the permutation count. Changes:
+
+| Change | Sections |
+|---|---|
+| S3 uses 9 999 permutations (p = (1 + k) / 10 000); the report states the seed and the number of completed permutations | 10.2, 12, 15 (U6, D-perm), 18; config |
+| Disclosure of what was consulted extended to Drafts 4 and 5 (the stored v0.4 result files) | Opening paragraph |
+| CLI example names the real config path | 14 |
+| G0 (a′) says "on the project owner's authorization"; the freeze record file is named next to `CHANGELOG.md`; freeze steps 3 and 6 say how to run the checker | 13, 16 |
+| G2 tolerances and the short-file threshold added to section 18 and the config (values unchanged) | 18; config |
+
+No hypothesis, arm, candidate band, δ, fold, seed, replicate count other than the permutation
+count, threshold or decision rule changed.
+
 ## 18. Registered parameters (machine-checked)
 
 Each row below is compared with the config JSON by `scripts/protocol/check_amendment2.py`. The
 value column is JSON. A path written `len(x)` compares the length of the list at `x`. The
 checker also recomputes the 44 / 9 / 35 / 45 band sets from the rule in section 8.1, checks
 that the prose of sections 10.2, 12 and 13 states the same permutation count, δ and G3 value,
-checks the four evidence hashes against the files in `docs/results/paderborn-real3/`, and
-checks that the header, the final status line and `protocol_status` agree.
+checks the four evidence hashes against the files in `docs/results/paderborn-real3/`, checks
+that the header, the final status line and `protocol_status` agree, and, once the amendment is
+frozen, checks the hashes recorded in `CHANGELOG.md` and `amendment-v0.5-freeze-record.json`
+against the files.
 
 <!-- registered-parameters:start -->
 | Parameter | Value | Config path |
@@ -754,11 +778,14 @@ checks that the header, the final status line and `protocol_status` agree.
 | S2 replicates | `10000` | `statistics.S2_paired_bootstrap.replicates` |
 | S2 seed | `0` | `statistics.S2_paired_bootstrap.seed` |
 | S2 draws per class | `5` | `statistics.S2_paired_bootstrap.per_class_draws` |
-| S3 permutations | `1000` | `statistics.S3_permutation.permutations` |
+| S3 permutations | `9999` | `statistics.S3_permutation.permutations` |
 | S3 seed | `12345` | `statistics.S3_permutation.seed` |
 | P2 threshold | `0.05` | `decision.P2_alpha` |
 | G2 files at 900 rpm | `300` | `gates.G2.files_N09` |
 | G2 segments at 900 rpm | `1196` | `gates.G2.segments_N09` |
+| G2 sample-ratio tolerance | `0.001` | `gates.G2.ratio_tolerance` |
+| G2 vibration-length tolerance | `0.1` | `gates.G2.vibration_length_tolerance` |
+| G2 short-file threshold (samples) | `256000` | `gates.G2.short_file_threshold_samples` |
 | G3 expected R0 | `0.4685836297141851` | `gates.G3.R0_detection_ba_N09_expected` |
 | G3 tolerance | `1e-09` | `gates.G3.abs_tolerance` |
 | G4a resonance (Hz) | `3000` | `gates.G4a.resonance_hz` |
