@@ -1,0 +1,407 @@
+{
+  "amendment": "docs/protocol/amendment-v0.5-demodulation-band-selection.md",
+  "amendment_number": 2,
+  "draft": 5,
+  "draft_date": "2026-11-22",
+  "protocol_status": "FROZEN",
+  "frozen_on": "2026-11-22",
+  "status_rule": "Changed to FROZEN together with the amendment (section 16, step 3), before hashing. The SHA-256 of this file is recorded in CHANGELOG.md, never inside it.",
+  "task": "real3",
+  "primary_condition": "N09_M07_F10",
+  "channel": "vibration_1",
+  "fs_hz": 64000,
+  "segment_seconds": 1.0,
+  "rpm_source": "measured speed channel (as v0.4)",
+  "bearing_geometry": "6203",
+  "feature": {
+    "names": [
+      "env_bpfo_ratio",
+      "env_bpfi_ratio"
+    ],
+    "peak_tolerance": "max(3 bins, 0.02 * f0)",
+    "reference": "median over (0, 5 f0]"
+  },
+  "envelope_filter": {
+    "type": "butterworth bandpass",
+    "order": 4,
+    "application": "sosfiltfilt (zero phase)"
+  },
+  "bands": {
+    "rule": {
+      "bandwidths_hz": [2000, 4000, 8000, 16000],
+      "f_lo_min_hz": 1000,
+      "f_hi_max_hz": 27000,
+      "step": "B/2",
+      "switching_exclusion": "exclude if f_lo <= switching_frequency_hz <= f_hi (edges count as inside)",
+      "switching_frequency_hz": 16000
+    },
+    "default_D0": [6400, 25600],
+    "grid_44": [
+      [1000, 3000],
+      [2000, 4000],
+      [3000, 5000],
+      [4000, 6000],
+      [5000, 7000],
+      [6000, 8000],
+      [7000, 9000],
+      [8000, 10000],
+      [9000, 11000],
+      [10000, 12000],
+      [11000, 13000],
+      [12000, 14000],
+      [13000, 15000],
+      [14000, 16000],
+      [15000, 17000],
+      [16000, 18000],
+      [17000, 19000],
+      [18000, 20000],
+      [19000, 21000],
+      [20000, 22000],
+      [21000, 23000],
+      [22000, 24000],
+      [23000, 25000],
+      [24000, 26000],
+      [25000, 27000],
+      [1000, 5000],
+      [3000, 7000],
+      [5000, 9000],
+      [7000, 11000],
+      [9000, 13000],
+      [11000, 15000],
+      [13000, 17000],
+      [15000, 19000],
+      [17000, 21000],
+      [19000, 23000],
+      [21000, 25000],
+      [23000, 27000],
+      [1000, 9000],
+      [5000, 13000],
+      [9000, 17000],
+      [13000, 21000],
+      [17000, 25000],
+      [1000, 17000],
+      [9000, 25000]
+    ],
+    "excluded_9": [
+      [14000, 16000],
+      [15000, 17000],
+      [16000, 18000],
+      [13000, 17000],
+      [15000, 19000],
+      [9000, 17000],
+      [13000, 21000],
+      [1000, 17000],
+      [9000, 25000]
+    ],
+    "eligible_35": [
+      [1000, 3000],
+      [2000, 4000],
+      [3000, 5000],
+      [4000, 6000],
+      [5000, 7000],
+      [6000, 8000],
+      [7000, 9000],
+      [8000, 10000],
+      [9000, 11000],
+      [10000, 12000],
+      [11000, 13000],
+      [12000, 14000],
+      [13000, 15000],
+      [17000, 19000],
+      [18000, 20000],
+      [19000, 21000],
+      [20000, 22000],
+      [21000, 23000],
+      [22000, 24000],
+      [23000, 25000],
+      [24000, 26000],
+      [25000, 27000],
+      [1000, 5000],
+      [3000, 7000],
+      [5000, 9000],
+      [7000, 11000],
+      [9000, 13000],
+      [11000, 15000],
+      [17000, 21000],
+      [19000, 23000],
+      [21000, 25000],
+      [23000, 27000],
+      [1000, 9000],
+      [5000, 13000],
+      [17000, 25000]
+    ],
+    "full_45": [
+      [1000, 3000],
+      [2000, 4000],
+      [3000, 5000],
+      [4000, 6000],
+      [5000, 7000],
+      [6000, 8000],
+      [7000, 9000],
+      [8000, 10000],
+      [9000, 11000],
+      [10000, 12000],
+      [11000, 13000],
+      [12000, 14000],
+      [13000, 15000],
+      [14000, 16000],
+      [15000, 17000],
+      [16000, 18000],
+      [17000, 19000],
+      [18000, 20000],
+      [19000, 21000],
+      [20000, 22000],
+      [21000, 23000],
+      [22000, 24000],
+      [23000, 25000],
+      [24000, 26000],
+      [25000, 27000],
+      [1000, 5000],
+      [3000, 7000],
+      [5000, 9000],
+      [7000, 11000],
+      [9000, 13000],
+      [11000, 15000],
+      [13000, 17000],
+      [15000, 19000],
+      [17000, 21000],
+      [19000, 23000],
+      [21000, 25000],
+      [23000, 27000],
+      [1000, 9000],
+      [5000, 13000],
+      [9000, 17000],
+      [13000, 21000],
+      [17000, 25000],
+      [1000, 17000],
+      [9000, 25000],
+      [6400, 25600]
+    ]
+  },
+  "selection": {
+    "criterion": "pooled inner balanced accuracy, detection",
+    "delta": 0.05,
+    "tie_break": [
+      "wider bandwidth",
+      "lower f_lo"
+    ],
+    "inner_k": 4,
+    "inner_seed_base": 1000,
+    "inner_seed_rule": "inner_seed_base + outer_fold_index",
+    "inner_folds": "stratified_group_kfold over the outer-training bearings, 3-class labels",
+    "fallback": "b_star = b_best if S[b_best] >= S[D0] + delta, else D0",
+    "D0_role": "fallback under the delta rule; never chosen as best in V1, V2, VG"
+  },
+  "outer": {
+    "function": "stratified_group_kfold",
+    "groups": "bearing",
+    "labels": "3-class",
+    "k": 5,
+    "seed": 0
+  },
+  "arms": [
+    "V1",
+    "C0",
+    "R0",
+    "V1-45",
+    "V2",
+    "VG"
+  ],
+  "arm_rules": {
+    "V1": {
+      "role": "primary experimental",
+      "candidates": "eligible_35",
+      "selection": "nested inner CV, delta rule, D0 fallback",
+      "threshold_data": "N09_M07_F10 segments of the 12 outer-training bearings"
+    },
+    "C0": {
+      "role": "primary control",
+      "band": "default_D0",
+      "threshold_data": "N09_M07_F10 segments of the 12 outer-training bearings"
+    },
+    "R0": {
+      "role": "frozen v0.4 reference (gate G3)",
+      "band": "default_D0",
+      "threshold_data": "all four conditions of the outer-training bearings (exactly v0.4)"
+    },
+    "V1-45": {
+      "role": "secondary sensitivity (RQ7)",
+      "candidates": "full_45",
+      "selection": "as V1",
+      "threshold_data": "N09_M07_F10 segments of the 12 outer-training bearings"
+    },
+    "V2": {
+      "role": "secondary (RQ3)",
+      "candidates": "eligible_35",
+      "selection": "largest median spectral kurtosis over the N09_M07_F10 segments of the 12 outer-training bearings; no labels",
+      "spectral_kurtosis": "mean(|a|^4) / mean(|a|^2)^2 - 2, a = analytic signal of the band-passed segment",
+      "delta_rule": false,
+      "D0_fallback": false,
+      "tie_break": [
+        "wider bandwidth",
+        "lower f_lo"
+      ],
+      "threshold_data": "N09_M07_F10 segments of the 12 outer-training bearings"
+    },
+    "VG": {
+      "role": "secondary (RQ4)",
+      "candidates": "eligible_35",
+      "selection": "nested inner CV on all four conditions pooled, delta rule, D0 fallback",
+      "threshold_data": "all four conditions of the outer-training bearings"
+    }
+  },
+  "statistics": {
+    "S1_marginal_bootstrap": {
+      "unit": "bearing",
+      "stratified": false,
+      "replicates": 1000,
+      "seed": 0,
+      "level": 0.95
+    },
+    "S2_paired_bootstrap": {
+      "unit": "bearing",
+      "stratified_by_class": true,
+      "per_class_draws": 5,
+      "replicates": 10000,
+      "seed": 0,
+      "level": 0.95,
+      "limitation": "Resamples test bearings with fitted bands and thresholds held fixed; selection variability is reported separately (R1), not in the interval."
+    },
+    "S3_permutation": {
+      "exchange": "3-class bearing labels, class counts preserved",
+      "refolds": true,
+      "permutations": 9999,
+      "seed": 12345,
+      "p_formula": "(1 + k) / (1 + N), k = #{null BA >= observed BA}, N = permutations",
+      "monte_carlo_report": [
+        "seed",
+        "N completed (must equal permutations)",
+        "k",
+        "p",
+        "Clopper-Pearson 95% interval for k / N"
+      ],
+      "sequential_extension": false,
+      "permutations_owner_decision": {
+        "status": "DECIDED",
+        "decided_by": "project owner",
+        "decision_date": "2026-11-22",
+        "options": [1000, 9999],
+        "registered": 9999
+      }
+    }
+  },
+  "decision": {
+    "P1": "S1 lower bound of BA(V1) > point estimate of BA(C0)",
+    "P3": "S2 lower bound of BA(V1) - BA(C0) > 0",
+    "P2": "S3 p <= 0.05 (precondition, not evidence of V1 > C0)",
+    "H1_supported": "P1 and P3 and P2",
+    "R1": ">= 4 of 5 outer folds overlap the modal band by >= 50% of the narrower width",
+    "P2_alpha": 0.05
+  },
+  "secondary": {
+    "descriptive_only": true,
+    "delta_0_sensitivity": "rerun V1 with delta = 0; cannot change the primary conclusion",
+    "RQ2": "C0 lower 95% bound vs the R0 point estimate",
+    "RQ3": "V2 vs C0",
+    "RQ4": "VG per condition vs the v0.4 per-condition values",
+    "RQ7": "V1-45 vs V1; report whether any selected band contains 16 kHz",
+    "diagnosis_ba": "900 rpm diagnosis BA for V1's band vs C0 (decision U2)",
+    "optimism": "mean inner S[b_star] minus outer BA"
+  },
+  "gates": {
+    "G2": {
+      "files_N09": 300,
+      "segments_N09": 1196,
+      "sample_ratio_vib_to_4khz": 16,
+      "ratio_tolerance": 0.001,
+      "nominal_seconds": 4.0,
+      "vibration_length_tolerance": 0.1,
+      "short_file_threshold_samples": 256000,
+      "short_files_N09": [
+        "N09_M07_F10_K002_6",
+        "N09_M07_F10_KA15_8",
+        "N09_M07_F10_KA22_10",
+        "N09_M07_F10_KI21_2"
+      ]
+    },
+    "G3": {
+      "R0_detection_ba_N09_expected": 0.4685836297141851,
+      "abs_tolerance": 1e-09,
+      "source": "docs/results/paderborn-real3/benchmark_results.json: results.tasks.detection[baseline=envelope_rule].per_condition.N09_M07_F10",
+      "outer_folds_v04": {
+        "0": [
+          "K003",
+          "KA04",
+          "KI21"
+        ],
+        "1": [
+          "K005",
+          "KA16",
+          "KI14"
+        ],
+        "2": [
+          "K004",
+          "KA22",
+          "KI16"
+        ],
+        "3": [
+          "K001",
+          "KA30",
+          "KI04"
+        ],
+        "4": [
+          "K002",
+          "KA15",
+          "KI18"
+        ]
+      }
+    },
+    "G4a": {
+      "resonance_hz": 3000,
+      "min_folds": 4,
+      "fold_condition": "selected band is not D0 and f_lo < resonance_hz < f_hi (strict)",
+      "min_delta_ba": 0.2,
+      "require_S2_lower_bound_gt_0": true
+    },
+    "G4b": {
+      "resonance_hz": 8000,
+      "min_folds": 4,
+      "fold_condition": "selected band is D0, or f_lo < resonance_hz < f_hi (strict)",
+      "min_delta_ba": -0.05
+    },
+    "G5": {
+      "datasets": 20,
+      "permutations_each": 200,
+      "alpha": 0.05,
+      "max_significant": 3,
+      "signals": "all generated healthy",
+      "labels": "3 classes assigned to machines at random, 5 / 5 / 5"
+    }
+  },
+  "synthetic": {
+    "generator": "pumpguard.signals",
+    "fs_hz": 64000,
+    "segment_seconds": 1.0,
+    "bearing_geometry": "6203",
+    "rpm": 900,
+    "speed_drift": "per segment: rpm * (1 + 0.005 * N(0, 1))",
+    "classes": [
+      "healthy",
+      "bearing_outer",
+      "bearing_inner"
+    ],
+    "machines_per_class": 5,
+    "segments_per_machine": 20,
+    "noise_std_range": [0.03, 0.1],
+    "severity_range": [0.5, 1.5],
+    "data_seed": 2026,
+    "code_path": "same as the real run: band sets, delta, seeds"
+  },
+  "evidence_sha256": {
+    "benchmark_results.json": "8a5049e42cc412904240c0768a34e090d65128ebcf288274c3d810bb76f4bf01",
+    "leakage_results.json": "dbd31fce4e6ab4fedf95694a60678805749d10defd7210fe0f6f054ac598a250",
+    "feature_table_provenance.json": "0bd2d22d270f5a4da06456cd5d18b02f96d276b83ece4345426da10aa90d2f20",
+    "paderborn_verification.json": "77ad58199cd0789a78cc28c57b6853bb3d784049977aebac63440d2a17e797aa"
+  },
+  "evidence_commit": "d203b5eed799f6bea33f0ea8c965ac1fc7639e98"
+}
