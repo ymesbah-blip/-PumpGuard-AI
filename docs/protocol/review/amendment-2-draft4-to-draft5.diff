@@ -1,0 +1,310 @@
+--- Draft 4 (rebuilt)
++++ Draft 5
+@@ -3,8 +3,9 @@
+ | | |
+ |---|---|
+ | Amends | [`docs/benchmark-protocol.md`](../benchmark-protocol.md) (fixed protocol + amendment 1) |
+-| Amendment dates | Draft 1: 2026-11-21. Draft 2: 2026-11-22. Draft 3: 2026-11-22. **Draft 4: 2026-11-22** (evidence published; documentation only, section 17) |
+-| Status | **Draft 4. Experimental design approved in review 2; evidence published and hashes confirmed (G0(a) pending PR #12 CI and merge); owner sign-off pending. Not executed** |
++| Amendment dates | Draft 1: 2026-11-21. Drafts 2–4: 2026-11-22. **Draft 5: 2026-11-22** (pre-freeze audit corrections, section 17) |
++| Status | **DRAFT** (Draft 5). Design approved in review 2; pre-freeze audit corrections applied; PR #12 merge, permutation-count decision and owner sign-off pending. Not executed |
++| Machine-readable configuration | [`amendment-v0.5-config.json`](amendment-v0.5-config.json), checked against this text by `scripts/protocol/check_amendment2.py` (section 18) |
+ | Based on | v0.4 results in [`docs/results/paderborn-real3/`](../results/paderborn-real3/README.md), identified by content hash (section 2.1) |
+ | Scope | Paderborn KAt `real3` task, envelope physics rule only |
+ 
+@@ -88,9 +89,18 @@
+   `1d8d1ab` and the v0.4.0 release (`90e2282`), `src/` and `tests/` differ in one line only:
+   `_version.py`, `"0.3.0"` → `"0.4.0"`, set by the release commit `7d5ca74` after the code was
+   written.
+-- The analysis code is therefore the v0.4.0 code under its earlier version label, plus three
+-  changes from the evidence commit: the empty-`Unit` reader fix, the archive verification
+-  module, and the report-header wording.
++- The code that produced the four evidence files is the v0.4.0 code under its earlier version
++  label, plus two parts of the evidence commit that existed when the run started: the
++  empty-`Unit` reader fix and the archive-verification module (with its `paderborn verify` CLI).
++- Three parts of the evidence commit came **after** the run and did not affect any hashed file:
++  - the report-header wording fix in `benchmark.py`, after which `benchmark_report.md` was
++    regenerated from the unchanged `benchmark_results.json`;
++  - the KI04/KI14 description strings in the bearing table, edited while feature extraction
++    was running, after the process had loaded the module; these strings enter no result file;
++  - the figure script and the documentation.
++- The results files record a package version but no commit hash. The code state is therefore
++  reconstructed, not recorded. Gate G3 (exact reproduction of R0 and of the outer folds) is the
++  empirical check of this reconstruction.
+ - The evidence files stay as recorded. Rewriting the label would break their hashes.
+ 
+ **Origin of `paderborn_verification.json`.** It was written on 2026-11-21 by
+@@ -141,7 +151,7 @@
+ Secondary questions (descriptive, no confirmatory claim):
+ 
+ - **RQ2, threshold effect.** Does fitting the threshold on 900 rpm training data alone (C0)
+-  already recover detection, compared with the frozen v0.4 rule (R0 = 0.469)?
++  already recover detection, compared with the frozen v0.4 rule (R0 = 0.469, exact value in G3)?
+ - **RQ3, label-free selection.** Does a band chosen without labels (maximum spectral kurtosis on
+   training segments, arm V2) perform like V1?
+ - **RQ4, global band.** Does one band selected on all four conditions (arm VG) change detection
+@@ -176,9 +186,14 @@
+ - Switching produces components at k · 16 kHz with sidebands at multiples of f_el. The sampling
+   rate is 64 kHz = 4 × 16 kHz, so **every switching harmonic aliases onto 0, 16 or 32 kHz**: for
+   example, 48 kHz → 16 kHz and 80 kHz → 16 kHz.
+-- The 30 kHz anti-alias filter is 2nd order, so it attenuates these harmonics only weakly. If it
+-  were a Butterworth filter, which the source does not state, it would give about −8.8 dB at
+-  48 kHz.
++- The only documented analogue filter is the charge amplifier's 30 kHz low-pass, 2nd order. On
++  its own it would attenuate these harmonics only weakly: if it were a Butterworth filter, which
++  the source does not state, it would give about −8.8 dB at 48 kHz.
++- **Anti-alias filtering in the acquisition system is not documented.** The publication states
++  only that the signal is digitised at 64 kHz. If the acquisition hardware filters before
++  sampling, harmonics above 32 kHz are suppressed and only the 16 kHz fundamental and its
++  in-band sidebands remain relevant. Whether components above 32 kHz reach the samples is
++  therefore unknown.
+ - If switching noise couples into the vibration channel, it therefore concentrates around
+   16 kHz. Its amplitude can vary with motor current, and so with load and speed, which would put
+   an electrical modulation into the envelope.
+@@ -206,8 +221,9 @@
+ | Quantity | Value | Source |
+ |---|---|---|
+ | Vibration channel | `vibration_1`, accelerometer PCB 336C04 at the top of the bearing module | Lessmeier et al. (2016), p. 7; dataset card |
+-| Sampling rate | 64 kHz (Nyquist 32 kHz) | Publication; files: vibration samples ÷ 4 kHz-channel samples = 16 in every used file |
+-| Anti-alias / conditioning | Kistler 5015A charge amplifier, **30 kHz low-pass, 2nd order** (filter type not stated) | Cut-off: publication p. 7. Order: KAt rig page ("filter 30 kHz (2nd order)") |
++| Sampling rate | 64 kHz (Nyquist 32 kHz) | Publication; files: vibration samples ÷ 4 kHz-channel samples ≈ 16 in every used file (256 004 / 16 001 = 15.999) |
++| Signal-conditioning low-pass | Kistler 5015A charge amplifier, **30 kHz low-pass, 2nd order** (filter type not stated) | Cut-off: publication p. 7. Order: KAt rig page ("filter 30 kHz (2nd order)") |
++| Acquisition-system anti-alias filter | **Not documented** | Open item U8 (section 15) |
+ | Accelerometer frequency response | **Not documented** in the publication or rig page; datasheet not obtained | Open item U5 (section 15) |
+ | Drive | KEB Combivert 07F5E 1D-2B0A inverter, **16 kHz switching**; 425 W PMSM, p = 4 | Publication p. 7 |
+ | Recording length | Nominal 4 s. Observed in files: 256 004 vibration samples typical. 4 files at 900 rpm hold 255 997–255 999 samples (just under 4 s; 3 whole 1 s segments). 4 files at 1 500 rpm were rejected in v0.4 for inconsistent vibration length; none at 900 rpm | v0.4 feature table and file metadata |
+@@ -231,9 +247,9 @@
+ |---|---|---|---|
+ | **V1** | Selected per outer fold by nested inner CV from the **35 eligible bands**, with D0 as fallback (section 9.2) | 900 rpm segments of the 12 outer-training bearings | Primary experimental |
+ | **C0** | D0 = v0.4 default, 6 400–25 600 Hz | 900 rpm segments of the 12 outer-training bearings | Primary control (isolates the band) |
+-| **R0** | D0 | All four conditions of the outer-training bearings (exactly v0.4) | Frozen reference, must reproduce 0.469 (gate G3) |
++| **R0** | D0 | All four conditions of the outer-training bearings (exactly v0.4) | Frozen reference, must reproduce 0.4685836297141851 within 1e-9 (gate G3) |
+ | V1-45 | As V1, but from all 45 candidates, including the 9 that contain 16 kHz | as V1 | Secondary, pre-specified sensitivity analysis (RQ7) |
+-| V2 | Per outer fold: maximum median spectral kurtosis of the band-passed training segments over the 35 eligible bands, no labels | as V1 | Secondary (RQ3) |
++| V2 | Per outer fold: the eligible band (of 35) with the largest median spectral kurtosis over the 900 rpm segments of the 12 outer-training bearings. Spectral kurtosis of one segment in band b: K = mean(\|a\|⁴) / mean(\|a\|²)² − 2, with a the analytic signal of the band-passed segment (Antoni's definition). No labels, no δ rule, no D0 fallback; ties broken as in V1 (wider bandwidth, then lower f_lo) | as V1 | Secondary (RQ3) |
+ | VG | Per outer fold: nested inner CV on all four conditions pooled, 35 eligible bands, D0 fallback | All conditions (as v0.4) | Secondary (RQ4) |
+ 
+ ## 8. Candidate search space
+@@ -267,7 +283,7 @@
+ 
+ | Constraint | Value | Reason |
+ |---|---|---|
+-| Upper edge | ≤ 27 kHz | Limited by the charge amplifier: a 2nd-order 30 kHz low-pass, filter type not stated. If it were Butterworth, the response would be about −1.8 dB at 25.6 kHz (D0's edge) and −2.2 dB at 27 kHz: non-flat but usable, because the feature is a ratio within one band. Below Nyquist (32 kHz) with a 5 kHz guard against content aliased onto 32 kHz. **27 kHz is not a calibrated sensor range**: the accelerometer's response there is unknown (U5). |
++| Upper edge | ≤ 27 kHz | Limited by the charge-amplifier low-pass: 2nd order at 30 kHz, filter type not stated. If it were Butterworth, the response would be about −1.8 dB at 25.6 kHz (D0's edge) and −2.2 dB at 27 kHz: non-flat but usable, because the feature is a ratio within one band. Below Nyquist (32 kHz) with a 5 kHz guard against content aliased onto 32 kHz. **27 kHz is not a calibrated sensor range**: the accelerometer's response there is unknown (U5). |
+ | Lower edge | ≥ 1 kHz | Keeps direct low-order components out of the band: the 8th harmonic of BPFI at 1 500 rpm is 989 Hz. Envelope peaks must come from demodulation, not from defect or shaft harmonics passing the filter directly. Also keeps content aliased near 0 Hz out. Matches the project's existing 1 kHz definition of "high frequency" (`hf_energy_ratio`). |
+ | Minimum bandwidth | 2 kHz | Approximate rationale, not a spectral guarantee. The feature's reference level is the median over (0, 5 f₀]. For BPFI at 1 500 rpm that window reaches 618 Hz, so modulation sidebands up to ±618 Hz should pass. B = 2 kHz gives a 1 kHz half-width, but the zero-phase filter is already −6 dB at the edges and attenuates progressively before them. A resonance off the band centre loses more of one sideband. A 1 kHz band would cut part of the reference window at 1 500 rpm and inflate ratios artificially. At 900 rpm the window reaches 371 Hz. |
+ | Maximum bandwidth | 16 kHz plus D0 (19.2 kHz) | Wider bands converge to D0. |
+@@ -369,7 +385,12 @@
+   labels and regenerate the outer folds with seed 0.
+ - Rerun the complete nested V1 procedure and record the pooled outer BA.
+ - Do this for 1 000 permutations (decision U6), seed 12345.
+-- p = (1 + #{null BA ≥ observed BA}) / 1 001.
++- p = (1 + k) / (1 + N), with k = #{null BA ≥ observed BA} and N = 1 000, so p = (1 + k) / 1 001.
++- **Monte Carlo uncertainty is reported with p:** k, N, and the 95 % Clopper–Pearson interval for
++  the exceedance probability k / N. Near the threshold the standard error is about
++  √(0.05 · 0.95 / N) ≈ 0.007. The decision uses the point value p ≤ 0.05 as registered. No
++  permutations are added after the result is seen. If the interval contains 0.05, the report
++  says that P2 is close to the threshold.
+ 
+ **What S3 tests.**
+ 
+@@ -421,7 +442,7 @@
+ 
+ **Secondary questions** use the existing rule for descriptive statements only:
+ 
+-- RQ2: C0 vs R0, judged as C0's lower bound > 0.469.
++- RQ2: C0 vs R0, judged as C0's lower bound > the R0 point estimate (0.4685836297141851).
+ - RQ3: V2 vs C0.
+ - RQ4: VG per condition vs the v0.4 per-condition values.
+ - RQ7: V1-45 vs V1, reporting whether any selected band contains 16 kHz.
+@@ -433,7 +454,7 @@
+ 
+ The v0.5 report lists, next to V1 and C0:
+ 
+-- R0, recomputed (must equal 0.469);
++- R0, recomputed (must equal 0.4685836297141851 within 1e-9, gate G3);
+ - v0.4 `single_feature_threshold` at 900 rpm (0.671);
+ - v0.4 `logistic_regression` at 900 rpm (0.753, learned; context only).
+ 
+@@ -492,10 +513,10 @@
+ 
+ | Gate | Requirement |
+ |---|---|
+-| G0 | In this order: (a) the evidence branch `feat/paderborn-real3-evidence` is on GitHub and a reviewer has confirmed the four hashes of section 2.1 against the files served by GitHub; (b) all content edits are complete; (c) the project owner's decision is recorded in section 16; (d) the status line is changed to FROZEN with the date; (e) **only then** SHA-256 of this file and of the config JSON are computed and recorded in `CHANGELOG.md`. |
++| G0 | In this order: (a) the evidence branch `feat/paderborn-real3-evidence` is on GitHub and the four hashes of section 2.1 are confirmed against the files served by GitHub; (a′) PR #12 is merged into `main` by the project owner; (b) all content edits are complete and `scripts/protocol/check_amendment2.py` passes; (c) the project owner's decisions (permutation count, approval) are recorded in section 16; (d) the status is changed to FROZEN with the date, in this file and in the config's `protocol_status`; (e) **only then** SHA-256 of this file and of the config JSON are computed and recorded in `CHANGELOG.md`. |
+ | G1 | Implementation and tests merged: L1–L13, band sets, tie-break, δ rule, S2 pairing, determinism |
+ | G2 | Measured on the files, not assumed: 300 files and 1 196 segments at 900 rpm. Every used file has a vibration ÷ 4 kHz-channel sample ratio of 16 (± 0.1 %) and a vibration length within ±10 % of 4 s. At 900 rpm, the 4 known short files (255 997–255 999 samples, 3 segments) are the only ones below 256 000. Any deviation stops the run and requires an amendment. |
+-| G3 | R0 recomputed equals the v0.4 value 0.469, and outer folds equal v0.4's |
++| G3 | R0 recomputed equals the stored v0.4 value **0.4685836297141851** within an absolute tolerance of 1e-9, and the outer fold assignment equals v0.4's: fold 0 = {K003, KA04, KI21}, fold 1 = {K005, KA16, KI14}, fold 2 = {K004, KA22, KI16}, fold 3 = {K001, KA30, KI04}, fold 4 = {K002, KA15, KI18} |
+ | G4 | **Synthetic positive control** (section 13.1): V1 must find a known resonance that D0 cannot see, and must beat C0 |
+ | G5 | **Synthetic negative control** (section 13.1): smoke test against gross false-positive inflation |
+ | G6 | Single real-data run; report written regardless of outcome; results committed next to v0.4's |
+@@ -504,9 +525,12 @@
+ 
+ **Common set-up:**
+ 
+-- `pumpguard.signals` generator at fs = 64 kHz, 1 s segments, 900 rpm, 6203 geometry.
+-- 5 virtual machines per class (healthy, outer, inner), 20 segments per machine, default noise
+-  and severity ranges.
++- `pumpguard.signals` generator at fs = 64 kHz, 1 s segments, 6203 geometry.
++- 900 rpm for every machine (no machine-specific speed). Each segment keeps the generator's
++  speed drift: rpm × (1 + 0.005 · N(0, 1)).
++- 5 virtual machines per class (healthy, outer, inner), 20 segments per machine.
++- Noise and severity drawn per machine from the `make_synthetic_dataset` defaults:
++  noise_std 0.03–0.10, severity 0.5–1.5.
+ - Data seed 2026.
+ - The same code path, band sets, δ and seeds as the real run.
+ 
+@@ -521,7 +545,7 @@
+ 
+ **G4b, resonance inside D0 (harm check).** `resonance_hz = 8 000`. Pass requires both:
+ 
+-- V1 either keeps D0 or selects a band containing 8 kHz in ≥ 4 of 5 folds;
++- in ≥ 4 of 5 outer folds, V1 either keeps D0 or selects a band with f_lo < 8 kHz < f_hi;
+ - ΔBA ≥ −0.05.
+ 
+ Selection must not damage a case the default already handles.
+@@ -531,8 +555,8 @@
+ - 20 independent synthetic data sets in which every signal is generated healthy and the 3
+   class labels are assigned to machines at random (5 / 5 / 5).
+ - Each runs the complete V1 procedure and S3 with 200 permutations (to bound compute).
+-- Pass: at most 3 of 20 reach p ≤ 0.05. A calibrated test expects 1; a calibrated test fails this
+-  gate with probability 0.016.
++- Pass: at most 3 of 20 reach p ≤ 0.05 (α = 0.05). A calibrated test expects 1; a calibrated
++  test fails this gate with probability 0.016.
+ - **This is not a calibration proof.** Twenty data sets only detect gross inflation: a true
+   false-positive rate of 0.25 would be caught with probability 0.77.
+ 
+@@ -597,6 +621,10 @@
+    machines without new data. Files come from the Zenodo mirror (MD5-verified against the
+    mirror, not against the university's originals).
+ 8. **Multiplicity.** Only H1 is confirmatory; everything else is descriptive and is labelled so.
++9. **What S2 does not capture.** The paired bootstrap resamples test bearings while holding the
++   fitted bands and thresholds fixed. Its interval reflects which bearings were tested, not how
++   the selection and thresholds would vary with other training bearings. Selection instability
++   is reported separately (R1, selected band per fold) and is not folded into the interval.
+ 
+ **Decisions taken in review (2026-11-22)**
+ 
+@@ -609,6 +637,8 @@
+ | U5, accelerometer datasheet | **Open.** Does not block freezing. Consequence: no selected band above ~10 kHz is attributed to a specific mechanical resonance, and 27 kHz is not treated as a calibrated sensor range |
+ | U6, 1 000 permutations | Accepted; S3 reframed as an empirical null under bearing-label exchangeability (section 10.2, review 2) |
+ | U7, harmonic proximity | Accepted as a separate amendment 3, after v0.5, with longer records and narrower peak windows |
++| U8, acquisition anti-alias filter | **Open** (pre-freeze audit). Does not block freezing. Consequence: the aliasing argument in section 5 is conditional |
++| D-perm, permutation count | **Owner decision required before freezing.** Registered value: 1 000 (review 2). Alternative: 9 999 (p denominator 10 000, Monte Carlo SE ≈ 0.002 near 0.05, about 83 min instead of about 8 min). The chosen value must appear identically in sections 10.2, 12 and 18 and in the config |
+ 
+ ## 16. Change control and sign-off
+ 
+@@ -616,7 +646,8 @@
+ - Freeze procedure, in this order:
+   1. Complete all content edits.
+   2. Record the project owner's decision in the sign-off table below.
+-  3. Change the status line in the header and at the end of this file to FROZEN, with the date.
++  3. Change the status in the header and at the end of this file, and the `protocol_status` field
++     of the config JSON, to FROZEN with the date. Run `scripts/protocol/check_amendment2.py`.
+   4. Compute SHA-256 of this file **as it now stands** and of the config JSON.
+   5. Record both hashes in `CHANGELOG.md`.
+ - The hash lives outside this file. Writing it into the file would change the file and break
+@@ -632,7 +663,7 @@
+ | Project owner / reviewer, review 2 | | Design approved with minor corrections; freeze pending G0 | 2026-11-22 |
+ | Project owner, final sign-off | | Approve / revise / reject | |
+ 
+-## 17. Revision history and response to review 1
++## 17. Revision history and responses to reviews
+ 
+ **Draft 1, 2026-11-21:** initial draft.
+ 
+@@ -669,10 +700,89 @@
+ - Section 2.1 also explains the `pumpguard_version: "0.3.0"` label raised in PR #12: the code
+   equals v0.4.0 apart from the version string.
+ 
++**Draft 5, 2026-11-22:** responds to the pre-freeze audit (verdict "conditionally ready"). No
++hypothesis, arm, candidate band, threshold, seed, replicate count or decision rule changed.
++
++| # | Audit finding | Change in Draft 5 |
++|---|---|---|
++| A1 | Section 2.1 said the run used "three changes" from the evidence commit, including the report-header wording, which came after the run | Section 2.1 separates the two parts present at run time (reader fix, archive verification) from the three later parts (report header, KI04/KI14 strings, figure script and docs); states that the code state is reconstructed and that G3 checks it |
++| A2 | "Anti-alias filter" used for the charge amplifier's 30 kHz low-pass | Sections 5 and 6 call it the signal-conditioning low-pass; the acquisition-system anti-alias filter is recorded as not documented (open item U8); the aliasing argument is marked conditional |
++| A3 | G3 compared R0 with the rounded value 0.469 and no tolerance | G3, sections 7, 10.3 and 10.4 and the config use 0.4685836297141851 with absolute tolerance 1e-9, plus the explicit outer-fold assignment |
++| A4 | V2 tie-break, fallback and statistic not specified | Section 7: spectral kurtosis defined; no δ rule, no D0 fallback; tie-break as V1 |
++| A5 | Permutation p reported without Monte Carlo uncertainty | Section 10.2: k, N and a Clopper–Pearson interval reported; no sequential extension. Permutation count recorded as owner decision D-perm (section 15) |
++| A6 | S2's fixed-model limitation not stated | Section 15, limitation 9 |
++| A7 | "= 16 in every used file" is not exact | Section 6: ≈ 16 (256 004 / 16 001 = 15.999) |
++| A8 | Config incomplete: status field, G4a S2 condition and strict containment, G4b band condition, G5 α, synthetic set-up, V2 rule, secondary analyses | Config rewritten with these fields; section 18 lists every registered value with its config path |
++| A9 | Markdown and config can drift apart | `scripts/protocol/check_amendment2.py` recomputes the band sets from the rule and compares section 18, the prose values, the evidence hashes and the status fields with the config; run in the test suite |
++| A10 | G0 did not require the PR #12 merge or the config status | G0 (a′) and (d); section 16 step 3 |
++
++## 18. Registered parameters (machine-checked)
++
++Each row below is compared with the config JSON by `scripts/protocol/check_amendment2.py`. The
++value column is JSON. A path written `len(x)` compares the length of the list at `x`. The
++checker also recomputes the 44 / 9 / 35 / 45 band sets from the rule in section 8.1, checks
++that the prose of sections 10.2, 12 and 13 states the same permutation count, δ and G3 value,
++checks the four evidence hashes against the files in `docs/results/paderborn-real3/`, and
++checks that the header, the final status line and `protocol_status` agree.
++
++<!-- registered-parameters:start -->
++| Parameter | Value | Config path |
++|---|---|---|
++| Task | `"real3"` | `task` |
++| Primary condition | `"N09_M07_F10"` | `primary_condition` |
++| Channel | `"vibration_1"` | `channel` |
++| Sampling rate (Hz) | `64000` | `fs_hz` |
++| Segment length (s) | `1.0` | `segment_seconds` |
++| Bearing geometry | `"6203"` | `bearing_geometry` |
++| Envelope filter order | `4` | `envelope_filter.order` |
++| Bandwidths (Hz) | `[2000, 4000, 8000, 16000]` | `bands.rule.bandwidths_hz` |
++| Lowest f_lo (Hz) | `1000` | `bands.rule.f_lo_min_hz` |
++| Highest f_hi (Hz) | `27000` | `bands.rule.f_hi_max_hz` |
++| Switching frequency (Hz) | `16000` | `bands.rule.switching_frequency_hz` |
++| Default band D0 (Hz) | `[6400, 25600]` | `bands.default_D0` |
++| Grid bands | `44` | `len(bands.grid_44)` |
++| Excluded bands | `9` | `len(bands.excluded_9)` |
++| Eligible bands | `35` | `len(bands.eligible_35)` |
++| Full set | `45` | `len(bands.full_45)` |
++| δ | `0.05` | `selection.delta` |
++| Inner k | `4` | `selection.inner_k` |
++| Inner seed base (seed = base + outer fold index) | `1000` | `selection.inner_seed_base` |
++| Outer k | `5` | `outer.k` |
++| Outer seed | `0` | `outer.seed` |
++| S1 replicates | `1000` | `statistics.S1_marginal_bootstrap.replicates` |
++| S1 seed | `0` | `statistics.S1_marginal_bootstrap.seed` |
++| S2 replicates | `10000` | `statistics.S2_paired_bootstrap.replicates` |
++| S2 seed | `0` | `statistics.S2_paired_bootstrap.seed` |
++| S2 draws per class | `5` | `statistics.S2_paired_bootstrap.per_class_draws` |
++| S3 permutations | `1000` | `statistics.S3_permutation.permutations` |
++| S3 seed | `12345` | `statistics.S3_permutation.seed` |
++| P2 threshold | `0.05` | `decision.P2_alpha` |
++| G2 files at 900 rpm | `300` | `gates.G2.files_N09` |
++| G2 segments at 900 rpm | `1196` | `gates.G2.segments_N09` |
++| G3 expected R0 | `0.4685836297141851` | `gates.G3.R0_detection_ba_N09_expected` |
++| G3 tolerance | `1e-09` | `gates.G3.abs_tolerance` |
++| G4a resonance (Hz) | `3000` | `gates.G4a.resonance_hz` |
++| G4a minimum ΔBA | `0.2` | `gates.G4a.min_delta_ba` |
++| G4a minimum folds | `4` | `gates.G4a.min_folds` |
++| G4b resonance (Hz) | `8000` | `gates.G4b.resonance_hz` |
++| G4b minimum ΔBA | `-0.05` | `gates.G4b.min_delta_ba` |
++| G4b minimum folds | `4` | `gates.G4b.min_folds` |
++| G5 data sets | `20` | `gates.G5.datasets` |
++| G5 permutations each | `200` | `gates.G5.permutations_each` |
++| G5 maximum significant | `3` | `gates.G5.max_significant` |
++| G5 α | `0.05` | `gates.G5.alpha` |
++| Synthetic data seed | `2026` | `synthetic.data_seed` |
++| Synthetic machines per class | `5` | `synthetic.machines_per_class` |
++| Synthetic segments per machine | `20` | `synthetic.segments_per_machine` |
++| Synthetic speed (rpm) | `900` | `synthetic.rpm` |
++| Evidence commit | `"d203b5eed799f6bea33f0ea8c965ac1fc7639e98"` | `evidence_commit` |
++<!-- registered-parameters:end -->
++
+ ---
+ 
+-**PROTOCOL STATUS: DRAFTED — NOT YET EXPERIMENTALLY EXECUTED.**
++Draft 5: pre-freeze audit corrections applied; experimental design unchanged since review 2.
++Freeze is pending the rest of gate G0: PR #12 merged, the permutation-count decision, and owner
++sign-off. Implementation and the real-data experiment are not authorised until the amendment is
++frozen.
+ 
+-Draft 4: experimental design approved in review 2; evidence published with confirmed hashes.
+-Freeze is pending the rest of gate G0 (PR #12 CI green and merged, owner sign-off).
+-Implementation and the real-data experiment are not authorised until the amendment is frozen.
++**PROTOCOL STATUS: DRAFTED — NOT YET EXPERIMENTALLY EXECUTED.**

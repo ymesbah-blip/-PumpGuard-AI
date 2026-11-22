@@ -5,6 +5,7 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: '\.diff$'  # context lines in unified diffs end with a space
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-toml

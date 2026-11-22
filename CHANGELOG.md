@@ -19,6 +19,14 @@ archive verification for the Paderborn loader.
 - Dataset card: Zenodo mirror section (licence label, missing KA08, what the MD5s do and do not
   prove), fact-sheet check and values observed in real files.
 - 10 tests (280 in total).
+- Protocol amendment 2 (v0.5 demodulation-band selection), **Draft 5, not frozen, not
+  executed**: `docs/protocol/amendment-v0.5-demodulation-band-selection.md` and its config
+  `docs/protocol/amendment-v0.5-config.json`, with the Draft 4 → 5 change report, the PR #12
+  evidence review and the freeze-readiness report in `docs/protocol/review/`.
+- `scripts/protocol/check_amendment2.py`: checks the amendment against its config (registered
+  parameters, band sets recomputed from the rule, prose values, status fields), against the
+  evidence hashes and the stored G3 value, and recomputes the G3 folds. 8 tests (288 in total).
+- `docs/research/`: 12-week roadmap and scientific decision register.
 
 ### Results
 - Paderborn `real3` from the Zenodo mirror (15/15 archives MD5-verified, 1 200/1 200 files
@@ -39,6 +47,8 @@ archive verification for the Paderborn loader.
   (label unchanged: `inner`).
 - Model cards, README, `docs/leakage-experiment.md` and `ROADMAP.md` updated with the real-data
   results.
+- Pre-commit: the trailing-whitespace hook skips `.diff` files, whose context lines end with a
+  space.
 
 ## [0.4.0] - 2026-11-21
 
